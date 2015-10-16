@@ -3,19 +3,23 @@
 
 CC = gcc -g
 
-all: penntransform
+all: penntransform-osx
 
+#penntransform: penntransform.tab.o penntransform.o
+#	${CC} -o $@ penntransform.tab.o penntransform.o
 
-penntransform: penntransform.tab.o penntransform.o
-	${CC} -o $@ penntransform.tab.o penntransform.o
-
-penntransform.tab.c penntransform.tab.h: Penngrammar.y
+Penngrammar.tab.c Penngrammar.tab.h: Penngrammar.y
 	bison -vd Penngrammar.y
 
-penntransform.c: Pennlexer.l
-	flex -o $*.c $<
+lex.yy.c: Pennlexer.l Penngrammar.tab.h
+	flex Pennlexer.l
 
-penntransform.o: penntransform.c penntransform.tab.h
+penntransform-osx: Penngrammar.tab.c lex.yy.c
+	g++ Penngrammar.tab.c lex.yy.c -ll -o penntransform
 
-.SUFFIXES:	.pgm .l .y .c
+penntransform-linux: Penngrammar.tab.c lex.yy.c
+	g++ Penngrammar.tab.c lex.yy.c -lfl -o penntransform
+
+#penntransform.o: penntransform.c penntransform.tab.h
+#.SUFFIXES:	.pgm .l .y .c
 

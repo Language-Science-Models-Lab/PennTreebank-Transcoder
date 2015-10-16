@@ -1,12 +1,17 @@
- /*			-*-bison-*- */
+%{
+// Scanner file to convert Penn Treebank into lambek calculus
+// by Joseph Nunn and Sean Fulop, 2015
+#include <cstdio>
+#include <iostream>
+using namespace std;
+#define YY_DECL extern "C" int yylex()
 
- /*
- * scanner for Penn treebank
- *
- */
+extern void yyerror(const char *) ;
 
+#include "Penngrammar.tab.h"  // gets the token types that we return
+%}
 
- /* definitions */
+/* definitions */
 
 POS  CC|CD|DT|EX|FW|IN|JJ|JJR|JJS|LS|MD|NN|NNS|NNP|NNPS|PDT|POS|PRP|PRP\$|RB|RBR|RBS|RP|SYM|TO|UH|VB|VBD|VBG|VBN|VBP|VBZ|WDT|WP|WP\$|WRB|-NONE-
 
@@ -14,7 +19,6 @@ TERMINAL [A-Z]?[-a-z]*|[,;]
 
 NONTERMINAL [A-Z][A-Z][A-Z]?~?|[A-Z][A-Z][A-Z]?~?-[A-Z]+
 
- 
 %%
 
  /* rules */
@@ -26,32 +30,33 @@ NONTERMINAL [A-Z][A-Z][A-Z]?~?|[A-Z][A-Z][A-Z]?~?-[A-Z]+
 
  /*S printf( "S\n" );*/
 
-S { return S; }
+S { return S_TOKEN; }
 
+{POS} return POS_TOKEN ;
 
-{POS} printf( "POS\n" );
+{TERMINAL} return TERMINAL_TOKEN ;
 
-{TERMINAL} printf( "Terminal\n" );
-
-{NONTERMINAL} printf( "Nonterm\n" );
+{NONTERMINAL} return NON_TERMINAL_TOKEN ;
 
  /* match closing period and discard */
 \(\." "\@\.\)
 
-\@ printf( "HEAD\n" );
+\@ return HEAD_TOKEN ;
 
-\( printf( "LPAREN_TOKEN\n" );
+\( return L_PAREN_TOKEN ;
 
-\) printf( "RPAREN_TOKEN\n" );
+\) return R_PAREN_TOKEN ;
 
-\n { return EOL; }
+\n return EOL_TOKEN ;
 
 [ \t] { /* ignore whitespace */ }
 
-. { yyerror("Mystery character %c\n", *yytext); }
+. { char buf[35] ;
+    sprintf( buf, "Scan error: character %c seen\n", *yytext) ;
+    yyerror( buf ) ; }
 
 %%
-
+/*
 main(argc, argv)
 int argc;
 char **argv;
@@ -63,7 +68,7 @@ char **argv;
 	}
     }
     yylex();
-}
+}*/
 
 
 

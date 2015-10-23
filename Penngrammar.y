@@ -32,14 +32,12 @@ void yyerror( const char *msg ) {
 %token <tok> EOL_TOKEN ;
 %token <tok> S_TOKEN ;
 
+%start sentence
+
+
 %%
 
- /*node:		lparen node rparen
-	|	head node
-	|	pos 
-	|	nonterm
-	;*/
-parsetree : parsetree pos | parsetree terminal | parsetree nonterminal | parsetree head | parsetree lparen | parsetree rparen | parsetree eol | parsetree s | pos | terminal | nonterminal | head | lparen | rparen | eol | s
+/* parsetree : parsetree pos | parsetree terminal | parsetree nonterminal | parsetree head | parsetree lparen | parsetree rparen | parsetree eol | parsetree s | pos | terminal | nonterminal | head | lparen | rparen | eol | s */
 
 pos : POS_TOKEN { printf("POS token\n"); } ;
 
@@ -53,9 +51,20 @@ lparen : L_PAREN_TOKEN { printf("L_PAREN token\n"); } ;
 
 rparen : R_PAREN_TOKEN { printf("R_PAREN token\n"); } ;
 
-eol : EOL_TOKEN { printf("EOL token\n"); } ;
+/* eol : EOL_TOKEN { printf("EOL token\n"); } ; */
 
 s : S_TOKEN { printf("S token\n"); } ;
+
+sentence: lparen s phrase headphrase rparen {printf("got one!\n"); } ;
+
+word: head lparen pos head terminal rparen
+
+headphrase: head lparen nonterminal word phrase rparen
+    |  head lparen nonterminal word rparen
+
+phrase: lparen nonterminal word phrase rparen
+    | lparen nonterminal word rparen
+
 
 %%
 int main(int argc, char** argv) {

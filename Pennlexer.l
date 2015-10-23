@@ -24,7 +24,7 @@ NONTERMINAL [A-Z][A-Z][A-Z]?~?|[A-Z][A-Z][A-Z]?~?-[A-Z]+
  /* rules */
 
  /* match comment lines and take no action (discarding)*/
-\#.*$
+\#.*$ ;
 
  /* find elements of the Penn trees and return them */
 

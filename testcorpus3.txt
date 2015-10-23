@@ -1,0 +1,2 @@
+
+(S (NP @(NNP @Mary)) @(VP @(VBZ @sings) (NP~ @(NNS @songs))) (. @.))

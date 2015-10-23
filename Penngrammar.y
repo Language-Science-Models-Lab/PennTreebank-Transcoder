@@ -18,6 +18,8 @@ void yyerror( const char *msg ) {
 //typedef int Token ;
 %}
 
+//%define parse.error verbose
+
 %union {
   char *tok ;
   //  char *sval ;
@@ -32,12 +34,34 @@ void yyerror( const char *msg ) {
 %token <tok> EOL_TOKEN ;
 %token <tok> S_TOKEN ;
 
-%start sentence
+%start start ;
 
+
+ //%define parse.lac full
+//%define parse.error verbose
+ //%define parse.trace true
+
+%type <tok> sentence ;
 
 %%
+ /*
+parsetree : parsetree pos | parsetree terminal | parsetree nonterminal | parsetree head | parsetree lparen | parsetree rparen | parsetree eol | parsetree s | pos | terminal | nonterminal | head | lparen | rparen | eol | s
+ */
 
-/* parsetree : parsetree pos | parsetree terminal | parsetree nonterminal | parsetree head | parsetree lparen | parsetree rparen | parsetree eol | parsetree s | pos | terminal | nonterminal | head | lparen | rparen | eol | s */
+start : sentence
+      | sentence start
+      | eol start
+      | start eol ;
+
+sentence : lparen s phrase headphrase rparen eol { printf("got one!\n"); } ;
+
+headphrase : head lparen nonterminal word phrase rparen
+           |  head lparen nonterminal word rparen ;
+
+phrase : lparen nonterminal word phrase rparen
+       | lparen nonterminal word rparen ;
+
+word : head lparen pos head terminal rparen { printf("WORD rule\n"); } ;
 
 pos : POS_TOKEN { printf("POS token\n"); } ;
 
@@ -51,19 +75,10 @@ lparen : L_PAREN_TOKEN { printf("L_PAREN token\n"); } ;
 
 rparen : R_PAREN_TOKEN { printf("R_PAREN token\n"); } ;
 
-/* eol : EOL_TOKEN { printf("EOL token\n"); } ; */
+eol : EOL_TOKEN { printf("EOL token\n"); } ;
 
 s : S_TOKEN { printf("S token\n"); } ;
 
-sentence: lparen s phrase headphrase rparen {printf("got one!\n"); } ;
-
-word: head lparen pos head terminal rparen
-
-headphrase: head lparen nonterminal word phrase rparen
-    |  head lparen nonterminal word rparen
-
-phrase: lparen nonterminal word phrase rparen
-    | lparen nonterminal word rparen
 
 
 %%
@@ -73,7 +88,7 @@ int main(int argc, char** argv) {
 	FILE *myfile = fopen( argv[1], "r");
 	// make sure it is valid:
 	if (!myfile) {
-		cout << "I can't open a.snazzle.file!" << endl;
+		cout << "I can't open file!" << endl;
 		return -1;
 	}
 	// set flex to read from it instead of defaulting to STDIN:

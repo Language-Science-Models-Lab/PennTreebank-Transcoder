@@ -15,9 +15,9 @@ extern void yyerror(const char *) ;
 
 POS  CC|CD|DT|EX|FW|IN|JJ|JJR|JJS|LS|MD|NN|NNS|NNP|NNPS|PDT|POS|PRP|PRP\$|RB|RBR|RBS|RP|SYM|TO|UH|VB|VBD|VBG|VBN|VBP|VBZ|WDT|WP|WP\$|WRB|-NONE-
 
-TERMINAL [A-Z]?[-a-z]*|[,;]
+TERMINAL [A-Z]?[-a-z]*\.?|[0-9]*\.?[0-9]*
 
-NONTERMINAL [A-Z][A-Z][A-Z]?~?|[A-Z][A-Z][A-Z]?~?-[A-Z]+
+NONTERMINAL [A-Z][A-Z][A-Z]*~?|[A-Z][A-Z][-\+,A-Z]*
 
 %%
 
@@ -38,8 +38,8 @@ S { return S_TOKEN; }
 
 {NONTERMINAL} return NON_TERMINAL_TOKEN ;
 
- /* match closing period and discard */
-\(\." "\@\.\)
+ /* match punctuations and discard */
+\(\." "\@\.\)|\(," "\@,\)|\(;" "\@;\)
 
 \@ return HEAD_TOKEN ;
 

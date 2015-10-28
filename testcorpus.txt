@@ -1,2 +1,3 @@
 # Test corpus for Treebank transformation 
 (S (NP @(NNP @Mary)) @(VP @(VBZ @sings) (NP~ @(NNS @songs))) (. @.))
+(S @(NP+VP (NP~ @(NP+,+ADJP @(NP+, @(NP @(NPR (NNP @Pierre) @(NNP @Vinken))) (, @,)) (ADJP (NP (QP @(CD @61)) @(NNS @years)) @(JJ @old))) (, @,)) @(VP (MD @will) @(VP~ @(VB+NP+PP @(VB+NP @(VB @join) (NP~ (DT @the) @(NN @board))) (PP @(IN @as) (NP~ (DT @a) @(JJ+NN (JJ @nonexecutive) @(NN @director))))) (NP-TMP @(NPR @(NNP @Nov.)) (QP @(CD @29)))))) (. @.))

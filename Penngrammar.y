@@ -36,10 +36,11 @@ void yyerror( const char *msg ) {
 
 %start start ;
 
+%debug
 
  //%define parse.lac full
 //%define parse.error verbose
- //%define parse.trace true
+//		       %define parse.trace
 
 %type <tok> sentence ;
 
@@ -53,31 +54,49 @@ start : sentence
       | eol start
       | start eol ;
 
-sentence : lparen s phrase headphrase rparen eol { printf("got one!\n"); } ;
+sentence : lparen s phrase headphrase rparen eol { printf("got one!\n"); }
+	| lparen s headphrase rparen eol { printf("got one!\n"); } ;
 
 headphrase : head lparen nonterminal word phrase rparen
-           |  head lparen nonterminal word rparen ;
+	| head lparen nonterminal word headphrase rparen
+	| head lparen nonterminal phrase word rparen
+	| head lparen nonterminal headphrase word rparen	
+        | head lparen nonterminal word rparen
+	| head lparen nonterminal word word rparen
+	| head lparen nonterminal headphrase rparen	
+	| head lparen nonterminal phrase rparen	
+	| head lparen nonterminal headphrase phrase rparen 
+	| head lparen nonterminal phrase headphrase rparen ;
 
 phrase : lparen nonterminal word phrase rparen
-       | lparen nonterminal word rparen ;
+	| lparen nonterminal word headphrase rparen	
+       | lparen nonterminal phrase word rparen
+       | lparen nonterminal headphrase word rparen	
+       | lparen nonterminal word rparen 
+       | lparen nonterminal word word rparen
+       | lparen nonterminal headphrase rparen
+       | lparen nonterminal phrase rparen
+       | lparen nonterminal headphrase phrase rparen
+       | lparen nonterminal phrase headphrase rparen ;
 
-word : head lparen pos head terminal rparen { printf("WORD rule\n"); } ;
+word : head lparen pos head terminal rparen
+     | lparen pos head terminal rparen ;
 
-pos : POS_TOKEN { printf("POS token\n"); } ;
+pos : POS_TOKEN { } ;
 
-terminal : TERMINAL_TOKEN { printf("TERMINAL token\n"); } ;
+terminal : TERMINAL_TOKEN { } ;
 
-nonterminal : NON_TERMINAL_TOKEN { printf("NON_TERMINAL token\n"); } ;
+nonterminal : NON_TERMINAL_TOKEN { } ;
 
-head : HEAD_TOKEN { printf("HEAD token\n"); } ;
+head : HEAD_TOKEN { } ;
 
-lparen : L_PAREN_TOKEN { printf("L_PAREN token\n"); } ;
+lparen : L_PAREN_TOKEN { } ;
 
-rparen : R_PAREN_TOKEN { printf("R_PAREN token\n"); } ;
+rparen : R_PAREN_TOKEN { } ;
 
-eol : EOL_TOKEN { printf("EOL token\n"); } ;
+eol : EOL_TOKEN { } ;
 
-s : S_TOKEN { printf("S token\n"); } ;
+s : S_TOKEN {  } ;
 
 
 
@@ -93,6 +112,8 @@ int main(int argc, char** argv) {
 	}
 	// set flex to read from it instead of defaulting to STDIN:
 	yyin = myfile;
+	// set debugger to trace to stderr; redirect to errorlog if desired
+	yydebug = 1;
 	
 	// parse through the input until there is no more:
 	do {

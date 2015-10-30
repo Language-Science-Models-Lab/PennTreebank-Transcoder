@@ -10,8 +10,6 @@ gcc lex.yy.c -lfl # This will compile the output C program and produce an execut
 
 Then a.out can be executed with the target filename as argument.
 
-Currently there is also a test lexer named 'Pennlexer1.l' that is meant to process the test corpus in our Google Drive folder.
-
 Penngrammar.y is meant to be processed by Bison.
 
 Makefile is the all-important thing that compiles everything together.

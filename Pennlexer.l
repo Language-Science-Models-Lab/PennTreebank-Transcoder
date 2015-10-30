@@ -52,7 +52,7 @@ S { return S_TOKEN; }
 
 \n return EOL_TOKEN ;
 
-[ \t] { /* ignore whitespace */ }
+[ \t\r] { /* ignore whitespace */ }
 
 . { char buf[35] ;
     sprintf( buf, "Scan error: character %c seen\n", *yytext) ;

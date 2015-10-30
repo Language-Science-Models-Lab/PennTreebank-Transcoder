@@ -104,7 +104,7 @@ int main(int argc, char** argv) {
 	// set flex to read from it instead of defaulting to STDIN:
 	yyin = myfile;
 	// set debugger to trace to stderr; redirect to errorlog if desired
-	yydebug = 0;
+	yydebug = DEBUG;
 	
 	// parse through the input until there is no more:
 	do {

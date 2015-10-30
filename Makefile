@@ -9,7 +9,7 @@ all: penntransform-osx
 #	${CC} -o $@ penntransform.tab.o penntransform.o
 
 Penngrammar.tab.c Penngrammar.tab.h: Penngrammar.y
-	bison -vdt Penngrammar.y
+	bison -vd Penngrammar.y
 
 lex.yy.c: Pennlexer.l Penngrammar.tab.h
 	flex Pennlexer.l

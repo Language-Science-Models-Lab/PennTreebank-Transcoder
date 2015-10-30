@@ -54,22 +54,13 @@ start : sentence
       | eol start
       | start eol ;
 
-sentence : lparen s phrase headphrase rparen eol { printf("got one!\n"); }
-	| lparen s headphrase rparen eol { printf("got one!\n"); } ;
+sentence : lparen s phrase headphrase rparen eol { printf("\n"); }
+	     | lparen s headphrase rparen eol { printf("\n"); } ;
 
-headphrase : head lparen nonterminal word phrase rparen
-	| head lparen nonterminal word headphrase rparen
-	| head lparen nonterminal phrase word rparen
-	| head lparen nonterminal headphrase word rparen	
-        | head lparen nonterminal word rparen
-	| head lparen nonterminal word word rparen
-	| head lparen nonterminal headphrase rparen	
-	| head lparen nonterminal phrase rparen	
-	| head lparen nonterminal headphrase phrase rparen 
-	| head lparen nonterminal phrase headphrase rparen ;
+headphrase : head phrase ;
 
 phrase : lparen nonterminal word phrase rparen
-	| lparen nonterminal word headphrase rparen	
+       | lparen nonterminal word headphrase rparen	
        | lparen nonterminal phrase word rparen
        | lparen nonterminal headphrase word rparen	
        | lparen nonterminal word rparen 
@@ -79,8 +70,8 @@ phrase : lparen nonterminal word phrase rparen
        | lparen nonterminal headphrase phrase rparen
        | lparen nonterminal phrase headphrase rparen ;
 
-word : head lparen pos head terminal rparen { printf("%s", $<tok>5); }
-	| lparen pos head terminal rparen { printf("%s", $<tok>4); } ;
+word : head lparen pos head terminal rparen { printf("%s ", $<tok>5); }
+     | lparen pos head terminal rparen { printf("%s ", $<tok>4); } ;
 
 pos : POS_TOKEN { } ;
 
@@ -113,7 +104,7 @@ int main(int argc, char** argv) {
 	// set flex to read from it instead of defaulting to STDIN:
 	yyin = myfile;
 	// set debugger to trace to stderr; redirect to errorlog if desired
-	yydebug = 1;
+	yydebug = 0;
 	
 	// parse through the input until there is no more:
 	do {

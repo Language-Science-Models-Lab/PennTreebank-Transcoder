@@ -3,6 +3,8 @@
 // by Joseph Nunn and Sean Fulop, 2015
 #include <cstdio>
 #include <iostream>
+#include <string>
+
 using namespace std;
 #define YY_DECL extern "C" int yylex()
 
@@ -34,7 +36,8 @@ S { return S_TOKEN; }
 
 {POS} return POS_TOKEN ;
 
-{TERMINAL} return TERMINAL_TOKEN ;
+{TERMINAL} { yylval.tok = strdup( yytext ) ;
+             return TERMINAL_TOKEN ; }
 
 {NONTERMINAL} return NON_TERMINAL_TOKEN ;
 

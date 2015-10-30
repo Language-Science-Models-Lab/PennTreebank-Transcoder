@@ -79,8 +79,8 @@ phrase : lparen nonterminal word phrase rparen
        | lparen nonterminal headphrase phrase rparen
        | lparen nonterminal phrase headphrase rparen ;
 
-word : head lparen pos head terminal rparen
-     | lparen pos head terminal rparen ;
+word : head lparen pos head terminal rparen { printf("%s", $<tok>5); }
+	| lparen pos head terminal rparen { printf("%s", $<tok>4); } ;
 
 pos : POS_TOKEN { } ;
 

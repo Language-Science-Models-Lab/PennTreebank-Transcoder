@@ -54,19 +54,53 @@ start : sentence
       | eol start
       | start eol ;
 
-sentence : lparen s phrase headphrase rparen eol { printf("\n"); }
-	     | lparen s headphrase rparen eol { printf("\n"); } ;
+/* sentence : lparen s phrase headphrase rparen eol { printf("\n"); }
+	| lparen s phrase clause rparen eol { printf("\n"); }
+	| lparen s headphrase clause rparen eol { printf("\n"); }
+	 | lparen s headphrase phrase rparen eol { printf("\n"); }
+	 | lparen s headphrase rparen eol { printf("\n"); }
+	 | lparen s phrase rparen eol { printf("\n"); }
+	 | lparen s clause rparen eol { printf("\n"); } ; */
+
+sentence : clause eol { printf("\n"); } ;
+
+clause : lparen s phrase headphrase rparen
+	| lparen s phrase clause rparen
+	| lparen s phrase headclause rparen
+	| lparen s headphrase rparen
+	| lparen s headphrase phrase rparen
+	| lparen s headphrase clause rparen
+     	| lparen s phrase rparen
+        | lparen s clause rparen 
+	| lparen s headclause rparen
+	| lparen s word rparen
+	| lparen s word clause rparen
+	| lparen s word headclause rparen
+	| lparen s word phrase rparen
+	| lparen s word headphrase rparen ;
 
 headphrase : head phrase ;
 
+headclause : head clause ;
+
 phrase : lparen nonterminal word phrase rparen
-       | lparen nonterminal word headphrase rparen	
+       | lparen nonterminal word headphrase rparen
+       | lparen nonterminal word clause rparen
        | lparen nonterminal phrase word rparen
-       | lparen nonterminal headphrase word rparen	
+       | lparen nonterminal headphrase word rparen
+       | lparen nonterminal clause word rparen
+       | lparen nonterminal phrase clause rparen
+	| lparen nonterminal phrase headclause rparen
+       | lparen nonterminal headphrase clause rparen
+       | lparen nonterminal clause headphrase rparen
+       | lparen nonterminal clause phrase rparen
+	| lparen nonterminal headclause phrase rparen
        | lparen nonterminal word rparen 
        | lparen nonterminal word word rparen
        | lparen nonterminal headphrase rparen
        | lparen nonterminal phrase rparen
+       | lparen nonterminal clause rparen
+	| lparen nonterminal headclause rparen
        | lparen nonterminal headphrase phrase rparen
        | lparen nonterminal phrase headphrase rparen ;
 

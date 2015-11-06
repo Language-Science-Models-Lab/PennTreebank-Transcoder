@@ -17,9 +17,9 @@ extern void yyerror(const char *) ;
 
 POS  CC|CD|DT|EX|FW|IN|JJ|JJR|JJS|LS|MD|NN|NNS|NNP|NNPS|PDT|POS|PRP|PRP\$|RB|RBR|RBS|RP|SYM|TO|UH|VB|VBD|VBG|VBN|VBP|VBZ|WDT|WP|WP\$|WRB|-NONE-
 
-TERMINAL [A-Z]?[-a-z]*\.?|[0-9]*\.?[0-9]*
+TERMINAL \*T\*|\*U\*|[A-Z]?[-a-z\.\*]*|[0-9]*\.?[0-9]*-?[0-9]*\.?[0-9]*|[A-Z]\." "?[A-Z]?\.?
 
-NONTERMINAL [A-Z][A-Z][A-Z]*~?|[A-Z][A-Z][-\+,A-Z]*
+NONTERMINAL [-,\+]*[A-Z][-\+,~A-Z]+
 
 %%
 
@@ -32,17 +32,17 @@ NONTERMINAL [A-Z][A-Z][A-Z]*~?|[A-Z][A-Z][-\+,A-Z]*
 
  /*S printf( "S\n" );*/
 
-S { return S_TOKEN; }
+S(BAR)?~? { printf("%s ",yytext); return S_TOKEN;  }
 
-{POS} return POS_TOKEN ;
+{POS} { printf("%s ",yytext); return POS_TOKEN ; }
 
 {TERMINAL} { yylval.tok = strdup( yytext ) ;
              return TERMINAL_TOKEN ; }
 
 {NONTERMINAL} return NON_TERMINAL_TOKEN ;
 
- /* match punctuations and discard */
-\(\." "\@\.\)|\(," "\@,\)|\(;" "\@;\)
+ /* match punctuations and dollar signs and discard */
+\(\." "\@\.\)|\(," "\@,\)|\(;" "\@;\)|\($" "\@$\)
 
 \@ return HEAD_TOKEN ;
 
@@ -50,9 +50,9 @@ S { return S_TOKEN; }
 
 \) return R_PAREN_TOKEN ;
 
-\n return EOL_TOKEN ;
+\n|\r return EOL_TOKEN ;
 
-[ \t\r] { /* ignore whitespace */ }
+[ \t] { /* ignore whitespace */ }
 
 . { char buf[35] ;
     sprintf( buf, "Scan error: character %c seen\n", *yytext) ;

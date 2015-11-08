@@ -17,9 +17,13 @@ extern void yyerror(const char *) ;
 
 POS  CC|CD|DT|EX|FW|IN|JJ|JJR|JJS|LS|MD|NN|NNS|NNP|NNPS|PDT|POS|PRP|PRP\$|RB|RBR|RBS|RP|SYM|TO|UH|VB|VBD|VBG|VBN|VBP|VBZ|WDT|WP|WP\$|WRB|-NONE-
 
-TERMINAL \*T\*|\*U\*|[A-Z]?[-a-z\.\*]*|[0-9]*\.?[0-9]*-?[0-9]*\.?[0-9]*|[A-Z]\." "?[A-Z]?\.?
+TERMINAL \*T\*|\*U\*|\*ICH\*|[A-Z]?[-a-z\.\*']+[A-Z]?[-a-z0-9\.]*[A-Z]*|[0-9]*\.?[0-9]*-?[0-9]*\.?[0-9]*|[A-Z]\." "?[A-Z]?\.?|[A-Z]|[0-9]+[-a-z]+|%
 
-NONTERMINAL [-,\+]*[A-Z][-\+,~A-Z]+
+FRAGMENT \(FRAG.*$
+
+NONTERMINAL [-,\.`':\+]*[A-Z][-\+,:\.~`'A-Z]+
+
+S S(BAR)?Q?~?|SINV~?|S-CLF~?
 
 %%
 
@@ -28,11 +32,12 @@ NONTERMINAL [-,\+]*[A-Z][-\+,~A-Z]+
  /* match comment lines and take no action (discarding)*/
 \#.*$ ;
 
+ /* discard fragments so labeled */
+{FRAGMENT} ;
+
  /* find elements of the Penn trees and return them */
 
- /*S printf( "S\n" );*/
-
-S(BAR)?~? { printf("%s ",yytext); return S_TOKEN;  }
+ {S} { printf("%s ",yytext); return S_TOKEN;  }
 
 {POS} { printf("%s ",yytext); return POS_TOKEN ; }
 
@@ -42,7 +47,7 @@ S(BAR)?~? { printf("%s ",yytext); return S_TOKEN;  }
 {NONTERMINAL} return NON_TERMINAL_TOKEN ;
 
  /* match punctuations and dollar signs and discard */
-\(\." "\@\.\)|\(," "\@,\)|\(;" "\@;\)|\($" "\@$\)
+\(\." "\@\.\)|\(," "\@,\)|\(;" "\@;\)|\($" "\@$\)|\(``" "\@``\)|\(''" "\@''\)|\(:" "\@--\)|\(:" "\@:\)|\(:" "\@;\) 
 
 \@ return HEAD_TOKEN ;
 

@@ -15,117 +15,93 @@ void yyerror( const char *msg ) {
   fprintf(stderr, "%s\n", msg) ;
 }
 
-//typedef int Token ;
 %}
 
-//%define parse.error verbose
-
 %union {
-  char *tok ;
-  //  char *sval ;
+  char *str ;
 }
 
-%token <tok> POS_TOKEN ;
-%token <tok> TERMINAL_TOKEN ;
-%token <tok> NON_TERMINAL_TOKEN ;
-%token <tok> HEAD_TOKEN ;
-%token <tok> L_PAREN_TOKEN ;
-%token <tok> R_PAREN_TOKEN ;
-%token <tok> EOL_TOKEN ;
-%token <tok> S_TOKEN ;
+%token <str> POS_TOKEN ;
+%token <str> TERMINAL_TOKEN ;
+%token <str> NON_TERMINAL_TOKEN ;
+%token <str> S_TOKEN ;
+%token EOF_TOKEN 0 "End of File" ;
 
 %start start ;
 
+/* Needed to build, even when not building debug version */
 %debug
 
- //%define parse.lac full
-//%define parse.error verbose
-//		       %define parse.trace
+%%
 
-%type <tok> sentence ;
+/* Important not to check for start eolf, as $accept : start eof is the top level invisible rule!, see top of bison generated .output file */
+start : clause eolf { printf("\n"); } ;
+      | start clause eolf { printf("\n"); } ;
+	  | eolf
+	  | start '\n' ;
+
+eolf : '\n'
+     | EOF_TOKEN ;
+
+headphrase : '@' phrase ;
+
+headclause : '@' clause ;
+
+clause : '(' s phrase headphrase ')'
+       | '(' s phrase clause ')'
+	   | '(' s phrase headclause ')'
+	   | '(' s headphrase ')'
+	   | '(' s headphrase phrase ')'
+	   | '(' s headphrase clause ')'
+       | '(' s phrase ')'
+       | '(' s clause ')'
+	   | '(' s headclause ')'
+	   | '(' s word ')'
+	   | '(' s word clause ')'
+	   | '(' s word headclause ')'
+	   | '(' s word phrase ')'
+	   | '(' s word headphrase ')' ;
+
+/*clstart : '(' s ; */
+
+phrase : '(' nonterminal word phrase ')'
+       | '(' nonterminal word headphrase ')'
+       | '(' nonterminal word clause ')'
+       | '(' nonterminal phrase word ')'
+       | '(' nonterminal headphrase word ')'
+       | '(' nonterminal clause word ')'
+       | '(' nonterminal phrase clause ')'
+	   | '(' nonterminal phrase headclause ')'
+       | '(' nonterminal headphrase clause ')'
+       | '(' nonterminal clause headphrase ')'
+       | '(' nonterminal clause phrase ')'
+	   | '(' nonterminal headclause phrase ')'
+       | '(' nonterminal word ')'
+       | '(' nonterminal word word ')'
+       | '(' nonterminal headphrase ')'
+       | '(' nonterminal phrase ')'
+       | '(' nonterminal clause ')'
+	   | '(' nonterminal headclause ')'
+       | '(' nonterminal headphrase phrase ')'
+       | '(' nonterminal phrase headphrase ')' ;
+
+/*phstart : '(' nonterminal ; */
+
+word : '@' subword
+     | subword
+
+subword : '(' pos '@' terminal ')' { printf("%s ", $<str>4); } ;
+
+s : S_TOKEN {} ;
+
+pos : POS_TOKEN {} ;
+
+terminal : TERMINAL_TOKEN {} ;
+
+nonterminal : NON_TERMINAL_TOKEN {} ;
 
 %%
- /*
-parsetree : parsetree pos | parsetree terminal | parsetree nonterminal | parsetree head | parsetree lparen | parsetree rparen | parsetree eol | parsetree s | pos | terminal | nonterminal | head | lparen | rparen | eol | s
- */
 
-start : sentence
-      | sentence start
-      | eol start
-      | start eol ;
-
-/* sentence : lparen s phrase headphrase rparen eol { printf("\n"); }
-	| lparen s phrase clause rparen eol { printf("\n"); }
-	| lparen s headphrase clause rparen eol { printf("\n"); }
-	 | lparen s headphrase phrase rparen eol { printf("\n"); }
-	 | lparen s headphrase rparen eol { printf("\n"); }
-	 | lparen s phrase rparen eol { printf("\n"); }
-	 | lparen s clause rparen eol { printf("\n"); } ; */
-
-sentence : clause eol { printf("\n"); } ;
-
-clause : lparen s phrase headphrase rparen
-	| lparen s phrase clause rparen
-	| lparen s phrase headclause rparen
-	| lparen s headphrase rparen
-	| lparen s headphrase phrase rparen
-	| lparen s headphrase clause rparen
-     	| lparen s phrase rparen
-        | lparen s clause rparen 
-	| lparen s headclause rparen
-	| lparen s word rparen
-	| lparen s word clause rparen
-	| lparen s word headclause rparen
-	| lparen s word phrase rparen
-	| lparen s word headphrase rparen ;
-
-headphrase : head phrase ;
-
-headclause : head clause ;
-
-phrase : lparen nonterminal word phrase rparen
-       | lparen nonterminal word headphrase rparen
-       | lparen nonterminal word clause rparen
-       | lparen nonterminal phrase word rparen
-       | lparen nonterminal headphrase word rparen
-       | lparen nonterminal clause word rparen
-       | lparen nonterminal phrase clause rparen
-	| lparen nonterminal phrase headclause rparen
-       | lparen nonterminal headphrase clause rparen
-       | lparen nonterminal clause headphrase rparen
-       | lparen nonterminal clause phrase rparen
-	| lparen nonterminal headclause phrase rparen
-       | lparen nonterminal word rparen 
-       | lparen nonterminal word word rparen
-       | lparen nonterminal headphrase rparen
-       | lparen nonterminal phrase rparen
-       | lparen nonterminal clause rparen
-	| lparen nonterminal headclause rparen
-       | lparen nonterminal headphrase phrase rparen
-       | lparen nonterminal phrase headphrase rparen ;
-
-word : head lparen pos head terminal rparen { printf("%s ", $<tok>5); }
-     | lparen pos head terminal rparen { printf("%s ", $<tok>4); } ;
-
-pos : POS_TOKEN { } ;
-
-terminal : TERMINAL_TOKEN { } ;
-
-nonterminal : NON_TERMINAL_TOKEN { } ;
-
-head : HEAD_TOKEN { } ;
-
-lparen : L_PAREN_TOKEN { } ;
-
-rparen : R_PAREN_TOKEN { } ;
-
-eol : EOL_TOKEN { } ;
-
-s : S_TOKEN {  } ;
-
-
-
-%%
 int main(int argc, char** argv) {
 	// open a file handle to given file:
   if ( argc > 1 ) {
@@ -139,17 +115,10 @@ int main(int argc, char** argv) {
 	yyin = myfile;
 	// set debugger to trace to stderr; redirect to errorlog if desired
 	yydebug = DEBUG;
-	
+
 	// parse through the input until there is no more:
 	do {
 		yyparse();
 	} while (!feof(yyin));
   } else yyerror( "No input file specified!\n" ) ;
 }
-/*
-void yyerror(const char *s) {
-	cout << "EEK, parse error!  Message: " << s << endl;
-	// might as well halt now:
-	exit(-1);
-	}*/
-

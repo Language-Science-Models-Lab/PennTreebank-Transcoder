@@ -6,11 +6,14 @@
 #include <string>
 
 using namespace std;
+
 #define YY_DECL extern "C" int yylex()
+#define yyterminate() return EOF_TOKEN
 
 extern void yyerror(const char *) ;
 
 #include "Penngrammar.tab.h"  // gets the token types that we return
+
 %}
 
 /* definitions */
@@ -25,54 +28,37 @@ NONTERMINAL [-,\+]*[A-Z][-\+,~A-Z]+
 
  /* rules */
 
- /* match comment lines and take no action (discarding)*/
+ /* match comment lines and take no action (discarding) */
 \#.*$ ;
 
  /* find elements of the Penn trees and return them */
 
- /*S printf( "S\n" );*/
+S(BAR)?~? { yylval.str = strdup( yytext ) ;
+            printf( "%s ",yytext ) ;
+            return S_TOKEN ; }
 
-S(BAR)?~? { printf("%s ",yytext); return S_TOKEN;  }
+{POS} { yylval.str = strdup( yytext ) ;
+        printf( "%s ",yytext ) ;
+        return POS_TOKEN ; }
 
-{POS} { printf("%s ",yytext); return POS_TOKEN ; }
-
-{TERMINAL} { yylval.tok = strdup( yytext ) ;
+{TERMINAL} { yylval.str = strdup( yytext ) ;
              return TERMINAL_TOKEN ; }
 
-{NONTERMINAL} return NON_TERMINAL_TOKEN ;
+{NONTERMINAL} { yylval.str = strdup( yytext ) ;
+                return NON_TERMINAL_TOKEN ; }
+
+ /* return former character tokens @, (, ), \n as literals */
+[\@\(\)\n] return yytext[ 0 ] ;
 
  /* match punctuations and dollar signs and discard */
 \(\." "\@\.\)|\(," "\@,\)|\(;" "\@;\)|\($" "\@$\)
 
-\@ return HEAD_TOKEN ;
+[ \t\r] { /* ignore whitespace */ }
 
-\( return L_PAREN_TOKEN ;
-
-\) return R_PAREN_TOKEN ;
-
-\n|\r return EOL_TOKEN ;
-
-[ \t] { /* ignore whitespace */ }
-
-. { char buf[35] ;
-    sprintf( buf, "Scan error: character %c seen\n", *yytext) ;
+ /* error default */
+. { const char *errorMsg = "Scan error: character %c seen\n" ;
+    char buf[ strlen( errorMsg ) ] ;
+    sprintf( buf, errorMsg, yytext[ 0 ] ) ;
     yyerror( buf ) ; }
 
 %%
-/*
-main(argc, argv)
-int argc;
-char **argv;
-{
-    if(argc > 1) {
-	if(!(yyin = fopen(argv[1], "r"))) {
-	    perror(argv[1]);
-	    return (1);
-	}
-    }
-    yylex();
-}*/
-
-
-
-

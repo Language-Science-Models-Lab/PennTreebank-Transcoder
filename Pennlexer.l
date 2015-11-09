@@ -20,9 +20,13 @@ extern void yyerror(const char *) ;
 
 POS  CC|CD|DT|EX|FW|IN|JJ|JJR|JJS|LS|MD|NN|NNS|NNP|NNPS|PDT|POS|PRP|PRP\$|RB|RBR|RBS|RP|SYM|TO|UH|VB|VBD|VBG|VBN|VBP|VBZ|WDT|WP|WP\$|WRB|-NONE-
 
-TERMINAL \*T\*|\*U\*|[A-Z]?[-a-z\.\*]*|[0-9]*\.?[0-9]*-?[0-9]*\.?[0-9]*|[A-Z]\." "?[A-Z]?\.?
+TERMINAL \*T\*|\*U\*|\*ICH\*|[A-Z]?[-a-z\.\*']+[A-Z]?[-a-z0-9\.]*[A-Z]*|[0-9]*\.?[0-9]*-?[0-9]*\.?[0-9]*|[A-Z]\." "?[A-Z]?\.?|[A-Z]|[0-9]+[-a-z]+|%
 
-NONTERMINAL [-,\+]*[A-Z][-\+,~A-Z]+
+FRAGMENT \(FRAG.*$
+
+NONTERMINAL [-,\.`':\+]*[A-Z][-\+,:\.~`'A-Z]+
+
+S S(BAR)?Q?~?|SINV~?|S-CLF~?
 
 %%
 
@@ -31,14 +35,16 @@ NONTERMINAL [-,\+]*[A-Z][-\+,~A-Z]+
  /* match comment lines and take no action (discarding) */
 \#.*$ ;
 
- /* find elements of the Penn trees and return them */
+ /* discard fragments so labeled */
+{FRAGMENT} ;
 
-S(BAR)?~? { yylval.str = strdup( yytext ) ;
-            printf( "%s ",yytext ) ;
-            return S_TOKEN ; }
+ /* find elements of the Penn trees and return them */
+{S} { yylval.str = strdup( yytext ) ;
+      printf( "%s ", yytext ) ;
+      return S_TOKEN ; }
 
 {POS} { yylval.str = strdup( yytext ) ;
-        printf( "%s ",yytext ) ;
+        printf( "%s ", yytext ) ;
         return POS_TOKEN ; }
 
 {TERMINAL} { yylval.str = strdup( yytext ) ;
@@ -51,11 +57,11 @@ S(BAR)?~? { yylval.str = strdup( yytext ) ;
 [\@\(\)\n] return yytext[ 0 ] ;
 
  /* match punctuations and dollar signs and discard */
-\(\." "\@\.\)|\(," "\@,\)|\(;" "\@;\)|\($" "\@$\)
+\(\." "\@\.\)|\(," "\@,\)|\(;" "\@;\)|\($" "\@$\)|\(``" "\@``\)|\(''" "\@''\)|\(:" "\@--\)|\(:" "\@:\)|\(:" "\@;\) 
 
 [ \t\r] { /* ignore whitespace */ }
 
- /* error default */
+ /* default to error */
 . { const char *errorMsg = "Scan error: character %c seen\n" ;
     char buf[ strlen( errorMsg ) ] ;
     sprintf( buf, errorMsg, yytext[ 0 ] ) ;

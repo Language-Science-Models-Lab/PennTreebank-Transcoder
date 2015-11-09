@@ -41,7 +41,7 @@ start : clause eolf { printf("\n"); } ;
 	  | start '\n' ;
 
 eolf : '\n'
-     | EOF_TOKEN ;
+     | "End of File" ;
 
 headphrase : '@' phrase ;
 

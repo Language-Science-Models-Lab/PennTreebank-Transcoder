@@ -1,0 +1,23 @@
+S S~ DT A NN form IN of NN asbestos RB once VBN used -NONE- * S -NONE- * TO to VB make NNP Kent NN cigarette NNS filters VBZ has VBN caused DT a JJ high NN percentage IN of NN cancer NNS deaths IN among DT a NN group IN of NNS workers VBN exposed -NONE- * TO to PRP it RBR more IN than CD 30 NNS years IN ago NNS researchers VBD reported SBAR~ -NONE- 0 S~ -NONE- *T* 
+S NNP Mary VBZ sings NNS songs 
+S NNP Pierre NNP Vinken CD 61 NNS years JJ old MD will VB join DT the NN board IN as DT a JJ nonexecutive NN director NNP Nov. CD 29 
+S NNP Mr. NNP Vinken VBZ is NN chairman IN of NNP Elsevier NNP N.V. DT the NNP Dutch VBG publishing NN group 
+S S~ DT The NN asbestos NN fiber NN crocidolite VBZ is RB unusually JJ resilient IN once S~ PRP it VBZ enters DT the NNS lungs IN with S~ RB even JJ brief NNS exposures TO to PRP it VBG causing NNS symptoms SBAR WDT that S~ -NONE- *T* VBP show RP up NNS decades JJ later NNS researchers VBD said SBAR~ -NONE- 0 S~ -NONE- *T* 
+S NNP Lorillard NNP Inc. DT the NN unit IN of JJ New JJ York-based NNP Loews NNP Corp. SBAR WDT that S~ -NONE- *T* VBZ makes NNP Kent NNS cigarettes VBD stopped VBG using NN crocidolite IN in PRP$ its NN Micronite NN cigarette NNS filters IN in CD 1956 
+S IN Although S~ JJ preliminary NNS findings VBD were VBN reported -NONE- * RBR more IN than DT a NN year IN ago DT the JJS latest NNS results VBP appear IN in NN today POS 's NNP New NNP England NNP Journal IN of NNP Medicine DT a NN forum JJ likely S -NONE- * TO to VB bring JJ new NN attention TO to DT the NN problem 
+S DT A NNP Lorillard NN spokewoman VBD said S~ DT This VBZ is DT an JJ old NN story 
+S PRP We VBP 're VBG talking IN about NNS years IN ago SBAR IN before S~ NN anyone VBD heard IN of S~ NN asbestos VBG having DT any JJ questionable NNS properties 
+S EX There VBZ is DT no NN asbestos IN in PRP$ our NNS products RB now 
+SINV S-TPC PRP We VBP have DT no JJ useful NN information IN on SBAR~ IN whether S~ NNS users VBP are IN at NN risk VBD said S~ -NONE- *T* NNP James NNP A. NNP Talcott IN of NNP Boston POS 's NNP Dana-Farber NNP Cancer NNP Institute 
+S S~ IN From CD 1953 TO to CD 1955 CD 9.8 CD billion NNP Kent NNS cigarettes IN with DT the NNS filters VBD were VBN sold -NONE- * DT the NN company VBD said SBAR~ -NONE- 0 S~ -NONE- *T* 
+S IN Among CD 33 NNS men SBAR WP who S~ -NONE- *T* VBD worked RB closely IN with DT the NN substance CD 28 -NONE- *ICH* VBP have VBN died JJ more IN than CD three NNS times DT the VBN expected NN number 
+S CD Four IN of DT the CD five VBG surviving NNS workers VBP have JJ asbestos-related NNS diseases VBG including CD three IN with RB recently VBN diagnosed NN cancer 
+SINV S-TPC DT The NN morbidity NN rate VBZ is DT a JJ striking NN finding IN among DT those IN of PRP us SBAR WP who S~ -NONE- *T* VBP study JJ asbestos-related NNS diseases VBD said S~ -NONE- *T* NNP Dr. NNP Talcott 
+S S~ DT The NN percentage IN of NN lung NN cancer NNS deaths IN among DT the NNS workers IN at DT the NNP West NNP Groton NNP Mass. NN paper NN factory VBZ appears S~ -NONE- * TO to VB be DT the JJS highest IN for DT any NN asbestos NNS workers VBN studied -NONE- * IN in JJ Western VBN industrialized NNS countries PRP he VBD said SBAR~ -NONE- 0 S~ -NONE- *T* 
+S DT The NNP U.S. VBZ is CD one IN of DT the JJ few VBN industrialized NNS nations SBAR WDT that S~ -NONE- *T* VBZ does RB n't VB have DT a JJR higher NN standard IN of NN regulation IN for DT the JJ smooth JJ needle-like NNS fibers JJ such IN as NN crocidolite SBAR WDT that S~ -NONE- *T* VBP are VBN classified -NONE- * IN as NNS amphobiles VBG according TO to NNP Brooke NNP T. NNP Mossman DT a NN professor IN of NN pathlogy IN at DT the NNP University IN of NNP Vermont NNP College IN of NNP Medicine 
+S IN In NNP July DT the NNP Environmental NNP Protection NNP Agency VBD imposed DT a JJ gradual NN ban IN on RB virtually DT all NNS uses IN of NN asbestos 
+S IN By CD 1997 RB almost DT all VBG remaining NNS uses IN of JJ cancer-causing NN asbestos MD will VB be VBN outlawed -NONE- * 
+S IN About CD 160 NNS workers IN at DT a NN factory SBAR WDT that S~ -NONE- *T* VBD made NN paper IN for DT the NNP Kent NNS filters VBD were VBN exposed -NONE- * TO to NN asbestos IN in DT the CD 1950s 
+S NNS Areas IN of DT the NN factory SBAR -NONE- *ICH* VBD were RB particularly JJ dusty SBAR~ WRB where S~ DT the NN crocidolite VBD was VBN used -NONE- * -NONE- *T* 
+S NNS Workers VBD described NNS clouds IN of JJ blue NN dust SBAR WDT that S~ -NONE- *T* VBD hung IN over NNS parts IN of DT the NN factory RB even IN though S~ NN exhaust NNS fans VBD ventilated DT the NN area 
+S PRP It VBZ has DT no NN bearing IN on PRP$ our NN work NN force NN today 

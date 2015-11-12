@@ -12,7 +12,7 @@ Penngrammar.tab.c Penngrammar.tab.h: Penngrammar.y
 	bison -vd Penngrammar.y
 
 lex.yy.c: Pennlexer.l Penngrammar.tab.h
-	flex Pennlexer.l
+	flex -l Pennlexer.l
 
 osx: Penngrammar.tab.c lex.yy.c
 	g++ Penngrammar.tab.c lex.yy.c -ll -o ptrans -DDEBUG=0

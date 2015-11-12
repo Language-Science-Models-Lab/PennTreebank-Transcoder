@@ -22,18 +22,20 @@ POS  CC|CD|DT|EX|FW|IN|JJ|JJR|JJS|LS|MD|NN|NNS|NNP|NNPS|PDT|POS|PRP|PRP\$|RB|RBR
 
 TERMINAL \*T\*|\*U\*|\*ICH\*|[A-Z]?[-a-z\.\*']+[A-Z]?[-a-z0-9\.]*[A-Z]*|[0-9]*\.?[0-9]*-?[0-9]*\.?[0-9]*|[A-Z]\." "?[A-Z]?\.?|[A-Z]|[0-9]+[-a-z]+|%
 
-FRAGMENT \(FRAG.*$
+FRAGMENT \(FRAG.*
+
+S S(BAR)?Q?~?|SINV~?|S-CLF~?|S-TPC~?
 
 NONTERMINAL [-,\.`':\+]*[A-Z][-\+,:\.~`'A-Z]+
 
-S S(BAR)?Q?~?|SINV~?|S-CLF~?
+
 
 %%
 
  /* rules */
 
  /* match comment lines and take no action (discarding) */
-\#.*$ ;
+\#.* ;
 
  /* discard fragments so labeled */
 {FRAGMENT} ;
@@ -50,8 +52,14 @@ S S(BAR)?Q?~?|SINV~?|S-CLF~?
 {TERMINAL} { yylval.str = strdup( yytext ) ;
              return TERMINAL_TOKEN ; }
 
+[A-Z][A-Z]+[a-z]*/\) { yylval.str = strdup( yytext ) ;
+             return TERMINAL_TOKEN ; }
+ /* the above is not part of the TERMINAL defs because it uses trailing context, which is more expensive in disjunctions of regexps */
+
 {NONTERMINAL} { yylval.str = strdup( yytext ) ;
                 return NON_TERMINAL_TOKEN ; }
+
+
 
  /* return former character tokens @, (, ), \n as literals */
 [\@\(\)\n] return yytext[ 0 ] ;

@@ -26,7 +26,7 @@ FRAGMENT \(FRAG.*
 
 S S(BAR)?Q?~?|SINV~?|S-CLF~?|S-TPC~?
 
-NONTERMINAL [-,\.`':\+]*[A-Z][-\+,:\.~`'A-Z]+
+NONTERMINAL [-,\.`':\+]*[A-Z][-\+,:$\.~`'A-Z]+
 
 
 
@@ -70,7 +70,7 @@ NONTERMINAL [-,\.`':\+]*[A-Z][-\+,:\.~`'A-Z]+
 [ \t\r] { /* ignore whitespace */ }
 
  /* default to error */
-. { const char *errorMsg = "Scan error: character %c seen\n" ;
+. { const char *errorMsg = "\n Syntax error in scan: character %c seen\n" ;
     char buf[ strlen( errorMsg ) ] ;
     sprintf( buf, errorMsg, yytext[ 0 ] ) ;
     yyerror( buf ) ; }

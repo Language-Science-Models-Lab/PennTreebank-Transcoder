@@ -24,7 +24,7 @@ TERMINAL \*T\*|\*U\*|\*ICH\*|[A-Z]?[-a-z\.\*']+[A-Z]?[-a-z0-9\.]*[A-Z]*|[0-9]*\.
 
 FRAGMENT \(FRAG.*
 
-S S(BAR)?Q?~?|SINV~?|S-CLF~?|S-TPC~?
+S S(BAR)?Q?~?|SINV~?|S-CLF~?|S-TPC~?|S-ADV~?
 
 NONTERMINAL [-,\.`':\+]*[A-Z][-\+,:$\.~`'A-Z]+
 
@@ -46,7 +46,7 @@ NONTERMINAL [-,\.`':\+]*[A-Z][-\+,:$\.~`'A-Z]+
       return S_TOKEN ; }
 
 {POS} { yylval.str = strdup( yytext ) ;
-        printf( "%s ", yytext ) ;
+        /* printf( "%s ", yytext ) ; */
         return POS_TOKEN ; }
 
 {TERMINAL} { yylval.str = strdup( yytext ) ;

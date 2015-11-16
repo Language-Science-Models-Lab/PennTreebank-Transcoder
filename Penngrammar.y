@@ -78,10 +78,10 @@ phrase : '(' nonterminal word phrase ')' { $$ = $3 ; } ;
        | '(' nonterminal clause phrase ')' { $$ = $3 ; } ;
 	   | '(' nonterminal headclause phrase ')' { $$ = $3 ; } ;
        | '(' nonterminal word ')' { $$ = $3 ; } ;
-       | '(' nonterminal word word ')' { const char* formatStr = "[ %s %s ]" ;
-                                         char buf[ strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ] ; 
-                                         sprintf( buf, formatStr, $3, $4 ) ;
-                                         $$ = buf ; } ;
+       | '(' nonterminal word word ')' { const char* formatStr = "[ %s %s ]" ; // Two formatted arguments
+                                         $$ = (char*)malloc( strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ) ; // the magic number to use is 2 * number of printed arguments
+                                         sprintf( $$, formatStr, $3, $4 ) ;
+										 printf( "%s", $$ ) ; }
        | '(' nonterminal headphrase ')' { $$ = $3 ; } ;
        | '(' nonterminal phrase ')' { $$ = $3 ; } ;
        | '(' nonterminal clause ')' { $$ = $3 ; } ;

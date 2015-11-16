@@ -25,7 +25,8 @@ void yyerror( const char *msg ) {
 %token <str> TERMINAL_TOKEN ;
 %token <str> NON_TERMINAL_TOKEN ;
 %token <str> S_TOKEN ;
-%token EOF_TOKEN 0 "End of File" ;
+%token <str> EOF_TOKEN 0 "End of File" ;
+%type <str> s pos terminal nonterminal subword word phrase clause headphrase headclause start eolf
 
 %start start ;
 
@@ -43,54 +44,57 @@ start : clause eolf { printf("\n"); } ;
 eolf : '\n'
      | "End of File" ;
 
-headphrase : '@' phrase ;
+headphrase : '@' phrase { $$ = $2 ; } ;
 
-headclause : '@' clause ;
+headclause : '@' clause { $$ = $2 ; } ;
 
-clause : '(' s phrase headphrase ')'
-       | '(' s phrase clause ')'
-	   | '(' s phrase headclause ')'
-	   | '(' s headphrase ')'
-	   | '(' s headphrase phrase ')'
-	   | '(' s headphrase clause ')'
-       | '(' s phrase ')'
-       | '(' s clause ')'
-	   | '(' s headclause ')'
-	   | '(' s word ')'
-	   | '(' s word clause ')'
-	   | '(' s word headclause ')'
-	   | '(' s word phrase ')'
-	   | '(' s word headphrase ')' ;
+clause : '(' s phrase headphrase ')' { $$ = $2 ; } ;
+       | '(' s phrase clause ')' { $$ = $2 ; } ;
+	   | '(' s phrase headclause ')' { $$ = $2 ; } ;
+	   | '(' s headphrase ')' { $$ = $2 ; } ;
+	   | '(' s headphrase phrase ')' { $$ = $2 ; } ;
+	   | '(' s headphrase clause ')' { $$ = $2 ; } ;
+       | '(' s phrase ')' { $$ = $2 ; } ;
+       | '(' s clause ')' { $$ = $2 ; } ;
+	   | '(' s headclause ')' { $$ = $2 ; } ;
+	   | '(' s word ')' { $$ = $2 ; } ;
+	   | '(' s word clause ')' { $$ = $2 ; } ;
+	   | '(' s word headclause ')' { $$ = $2 ; } ;
+	   | '(' s word phrase ')' { $$ = $2 ; } ;
+	   | '(' s word headphrase ')' { $$ = $2 ; } ;
 
 /*clstart : '(' s ; */
 
-phrase : '(' nonterminal word phrase ')'
-       | '(' nonterminal word headphrase ')'
-       | '(' nonterminal word clause ')'
-       | '(' nonterminal phrase word ')'
-       | '(' nonterminal headphrase word ')'
-       | '(' nonterminal clause word ')'
-       | '(' nonterminal phrase clause ')'
-	   | '(' nonterminal phrase headclause ')'
-       | '(' nonterminal headphrase clause ')'
-       | '(' nonterminal clause headphrase ')'
-       | '(' nonterminal clause phrase ')'
-	   | '(' nonterminal headclause phrase ')'
-       | '(' nonterminal word ')'
-       | '(' nonterminal word word ')'
-       | '(' nonterminal headphrase ')'
-       | '(' nonterminal phrase ')'
-       | '(' nonterminal clause ')'
-	   | '(' nonterminal headclause ')'
-       | '(' nonterminal headphrase phrase ')'
-       | '(' nonterminal phrase headphrase ')' ;
+phrase : '(' nonterminal word phrase ')' { $$ = $3 ; } ;
+       | '(' nonterminal word headphrase ')' { $$ = $3 ; } ;
+       | '(' nonterminal word clause ')' { $$ = $3 ; } ;
+       | '(' nonterminal phrase word ')' { $$ = $3 ; } ;
+       | '(' nonterminal headphrase word ')' { $$ = $3 ; } ;
+       | '(' nonterminal clause word ')' { $$ = $3 ; } ;
+       | '(' nonterminal phrase clause ')' { $$ = $3 ; } ;
+	   | '(' nonterminal phrase headclause ')' { $$ = $3 ; } ;
+       | '(' nonterminal headphrase clause ')' { $$ = $3 ; } ;
+       | '(' nonterminal clause headphrase ')' { $$ = $3 ; } ;
+       | '(' nonterminal clause phrase ')' { $$ = $3 ; } ;
+	   | '(' nonterminal headclause phrase ')' { $$ = $3 ; } ;
+       | '(' nonterminal word ')' { $$ = $3 ; } ;
+       | '(' nonterminal word word ')' { const char* formatStr = "[ %s %s ]" ;
+                                         char buf[ strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ] ; 
+                                         sprintf( buf, formatStr, $3, $4 ) ;
+                                         $$ = buf ; } ;
+       | '(' nonterminal headphrase ')' { $$ = $3 ; } ;
+       | '(' nonterminal phrase ')' { $$ = $3 ; } ;
+       | '(' nonterminal clause ')' { $$ = $3 ; } ;
+	   | '(' nonterminal headclause ')' { $$ = $3 ; } ;
+       | '(' nonterminal headphrase phrase ')' { $$ = $3 ; } ;
+       | '(' nonterminal phrase headphrase ')' { $$ = $3 ; } ;
 
 /*phstart : '(' nonterminal ; */
 
-word : '@' subword
-     | subword
+word : '@' subword { $$ = $2 ; }
+| subword { $$ = $1 ; }
 
-subword : '(' pos '@' terminal ')' { printf("%s ", $<str>4); } ;
+subword : '(' pos '@' terminal ')' { $$ = $4 ; } ;
 
 s : S_TOKEN {} ;
 

@@ -4,6 +4,7 @@
 
 #include <cstdio>
 #include <iostream>
+#include <string.h>
 
 using namespace std;
  
@@ -65,8 +66,14 @@ clause : '(' s phrase headphrase ')' { $$ = $2 ; } ;
 
 /*clstart : '(' s ; */
 
-phrase : '(' nonterminal word phrase ')' { $$ = $3 ; } ;
-       | '(' nonterminal word headphrase ')' { $$ = $3 ; } ;
+phrase : '(' nonterminal word phrase ')' { const char* formatStr = "[ %s %s ]" ;
+ $$ = (char*)malloc( strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ) ;
+ sprintf( $$, formatStr, $3, $4 ) ;
+ printf( "%s", $$ ) ; } ;
+       | '(' nonterminal word headphrase ')' { const char* formatStr = "[ %s %s ]" ;
+ $$ = (char*)malloc( strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ) ;
+ sprintf( $$, formatStr, $3, $4 ) ;
+ printf( "%s", $$ ) ; } ;
        | '(' nonterminal word clause ')' { $$ = $3 ; } ;
        | '(' nonterminal phrase word ')' { $$ = $3 ; } ;
        | '(' nonterminal headphrase word ')' { $$ = $3 ; } ;
@@ -78,7 +85,7 @@ phrase : '(' nonterminal word phrase ')' { $$ = $3 ; } ;
        | '(' nonterminal clause phrase ')' { $$ = $3 ; } ;
 	   | '(' nonterminal headclause phrase ')' { $$ = $3 ; } ;
        | '(' nonterminal word ')' { $$ = $3 ; } ;
-       | '(' nonterminal word word ')' { const char* formatStr = "[ %s %s ]" ; // Two formatted arguments
+       | '(' nonterminal word word ')' { const char* formatStr = "[ %s %s ]" ;  // Two formatted arguments
                                          $$ = (char*)malloc( strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ) ; // the magic number to use is 2 * number of printed arguments
                                          sprintf( $$, formatStr, $3, $4 ) ;
 										 printf( "%s", $$ ) ; }

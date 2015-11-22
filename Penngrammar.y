@@ -52,7 +52,8 @@ headclause : '@' clause { $$ = $2 ; } ;
 clause : '(' s phrase headphrase ')' { $$ = $2 ; } ;
        | '(' s phrase clause ')' { $$ = $2 ; } ;
 	   | '(' s phrase headclause ')' { $$ = $2 ; } ;
-	   | '(' s headphrase ')' { $$ = $2 ; } ;
+	   | '(' s headphrase ')' { $$ = $2 ;
+     printf( "%s", $$ ) ; } ;
 	   | '(' s headphrase phrase ')' { $$ = $2 ; } ;
 	   | '(' s headphrase clause ')' { $$ = $2 ; } ;
        | '(' s phrase ')' { $$ = $2 ; } ;
@@ -68,12 +69,12 @@ clause : '(' s phrase headphrase ')' { $$ = $2 ; } ;
 
 phrase : '(' nonterminal word phrase ')' { const char* formatStr = "[ %s %s ]" ;
  $$ = (char*)malloc( strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ) ;
- sprintf( $$, formatStr, $3, $4 ) ;
- printf( "%s", $$ ) ; } ;
+ sprintf( $$, formatStr, $3, $4 ) ;} ;
+  /*printf( "%s", $$ ) ; } ;*/
        | '(' nonterminal word headphrase ')' { const char* formatStr = "[ %s %s ]" ;
  $$ = (char*)malloc( strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ) ;
- sprintf( $$, formatStr, $3, $4 ) ;
- printf( "%s", $$ ) ; } ;
+ sprintf( $$, formatStr, $3, $4 ) ;} ;
+  /*printf( "%s", $$ ) ; } ;*/
        | '(' nonterminal word clause ')' { $$ = $3 ; } ;
        | '(' nonterminal phrase word ')' { $$ = $3 ; } ;
        | '(' nonterminal headphrase word ')' { $$ = $3 ; } ;
@@ -87,14 +88,18 @@ phrase : '(' nonterminal word phrase ')' { const char* formatStr = "[ %s %s ]" ;
        | '(' nonterminal word ')' { $$ = $3 ; } ;
        | '(' nonterminal word word ')' { const char* formatStr = "[ %s %s ]" ;  // Two formatted arguments
                                          $$ = (char*)malloc( strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ) ; // the magic number to use is 2 * number of printed arguments
-                                         sprintf( $$, formatStr, $3, $4 ) ;
-										 printf( "%s", $$ ) ; }
+                                      sprintf( $$, formatStr, $3, $4 ) ;} ;
+										 /* printf( "%s", $$ ) ; } */
        | '(' nonterminal headphrase ')' { $$ = $3 ; } ;
        | '(' nonterminal phrase ')' { $$ = $3 ; } ;
        | '(' nonterminal clause ')' { $$ = $3 ; } ;
 	   | '(' nonterminal headclause ')' { $$ = $3 ; } ;
-       | '(' nonterminal headphrase phrase ')' { $$ = $3 ; } ;
-       | '(' nonterminal phrase headphrase ')' { $$ = $3 ; } ;
+       | '(' nonterminal headphrase phrase ')' { const char* formatStr = "[ %s %s ]" ;  // Two formatted arguments
+                                         $$ = (char*)malloc( strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ) ;
+					 sprintf( $$, formatStr, $3, $4 ) ;} ;
+       | '(' nonterminal phrase headphrase ')' { const char* formatStr = "[ %s %s ]" ;  // Two formatted arguments
+                                         $$ = (char*)malloc( strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ) ;
+					 sprintf( $$, formatStr, $3, $4 ) ;} ;
 
 /*phstart : '(' nonterminal ; */
 

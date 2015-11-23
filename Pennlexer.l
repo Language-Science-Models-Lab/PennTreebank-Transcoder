@@ -42,7 +42,7 @@ NONTERMINAL [-,\.`':\+]*[A-Z][-\+,:$\.~`'A-Z]+
 
  /* find elements of the Penn trees and return them */
 {S} { yylval.str = strdup( yytext ) ;
-      printf( "%s ", yytext ) ;
+    /*  printf( "%s ", yytext ) ; */
       return S_TOKEN ; }
 
 {POS} { yylval.str = strdup( yytext ) ;

@@ -4,6 +4,7 @@
 
 #include <cstdio>
 #include <iostream>
+
 #include <string.h>
 
 using namespace std;
@@ -15,7 +16,33 @@ extern "C" FILE *yyin ;
 void yyerror( const char *msg ) {
   fprintf(stderr, "%s\n", msg) ;
 }
+ 
+// Outputs desired format string with args subbed in, please explicitly terminate string with null character '\0'
+inline char* output( const char* format, int numArgs, ... ) {
+  int argLengths, index ;
+  va_list args, argCopy ;
 
+  argLengths = 0 ;
+  va_start( args, numArgs ) ;
+
+  // Compute number and total length of all arg strings
+  va_copy( argCopy, args ) ;
+  for ( index = 0 ; index < numArgs ; index++ ) { 
+	argLengths += strlen( va_arg( argCopy, char* ) ) ;
+  }
+  va_end( argCopy ) ;
+
+  // Subtact the number of args to print * 2, the characters replaced in the format string
+  char* temp = (char*)malloc( strlen( format ) + argLengths - ( numArgs * 2 ) ) ;
+  vsprintf( temp, format, args ) ;
+
+  va_end( args ) ;
+  return temp ;
+}
+
+// Holds pointer to type information as parse happens like the $$ variable
+char* typeInfo ;
+ 
 %}
 
 %union {
@@ -37,8 +64,8 @@ void yyerror( const char *msg ) {
 %%
 
 /* Important not to check for start eolf, as $accept : start eof is the top level invisible rule!, see top of bison generated .output file */
-start : clause eolf { printf( "%s\n", $1 ) ; } ;
-      | start clause eolf { printf("%s\n", $2 ); } ;
+start : clause eolf { printf( "%s:\n", $1 ) ; } ;
+      | start clause eolf { printf("%s:\n", $2 ) ; } ;
 	  | eolf
 	  | start '\n' ;
 
@@ -49,95 +76,43 @@ headphrase : '@' phrase { $$ = $2 ; } ;
 
 headclause : '@' clause { $$ = $2 ; } ;
 
-clause : '(' s phrase headphrase ')' { const char* formatStr = "[ %s %s ]" ;
- $$ = (char*)malloc( strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ) ;
- sprintf( $$, formatStr, $3, $4 ) ;} ;
-       | '(' s phrase clause ')' { const char* formatStr = "[ %s %s ]" ;
- $$ = (char*)malloc( strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ) ;
- sprintf( $$, formatStr, $3, $4 ) ;} ;
-	   | '(' s phrase headclause ')' { const char* formatStr = "[ %s %s ]" ;
- $$ = (char*)malloc( strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ) ;
- sprintf( $$, formatStr, $3, $4 ) ;} ;
+clause : '(' s phrase headphrase ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
+       | '(' s phrase clause ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
+       | '(' s phrase headclause ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
 	   | '(' s headphrase ')' { $$ = $3 ; }
-  /*   printf( "%s", $$ ) ; } ;*/
-	   | '(' s headphrase phrase ')' { const char* formatStr = "[ %s %s ]" ;
- $$ = (char*)malloc( strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ) ;
- sprintf( $$, formatStr, $3, $4 ) ;} ;
-	   | '(' s headphrase clause ')' { const char* formatStr = "[ %s %s ]" ;
- $$ = (char*)malloc( strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ) ;
- sprintf( $$, formatStr, $3, $4 ) ;} ;
+       | '(' s headphrase phrase ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
+       | '(' s headphrase clause ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
        | '(' s phrase ')' { $$ = $3 ; } ;
        | '(' s clause ')' { $$ = $3 ; } ;
 	   | '(' s headclause ')' { $$ = $3 ; } ;
 	   | '(' s word ')' { $$ = $3 ; } ;
-	   | '(' s word clause ')' { const char* formatStr = "[ %s %s ]" ;
- $$ = (char*)malloc( strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ) ;
- sprintf( $$, formatStr, $3, $4 ) ;} ;
-	   | '(' s word headclause ')' { const char* formatStr = "[ %s %s ]" ;
- $$ = (char*)malloc( strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ) ;
- sprintf( $$, formatStr, $3, $4 ) ;} ;
-	   | '(' s word phrase ')' { const char* formatStr = "[ %s %s ]" ;
- $$ = (char*)malloc( strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ) ;
- sprintf( $$, formatStr, $3, $4 ) ;} ;
-	   | '(' s word headphrase ')' { const char* formatStr = "[ %s %s ]" ;
- $$ = (char*)malloc( strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ) ;
- sprintf( $$, formatStr, $3, $4 ) ;} ;
+       | '(' s word clause ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
+       | '(' s word headclause ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
+       | '(' s word phrase ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
+       | '(' s word headphrase ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
 
 /*clstart : '(' s ; */
 
-phrase : '(' nonterminal word phrase ')' { const char* formatStr = "[ %s %s ]" ;
- $$ = (char*)malloc( strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ) ;
- sprintf( $$, formatStr, $3, $4 ) ;} ;
-  /*printf( "%s", $$ ) ; } ;*/
-       | '(' nonterminal word headphrase ')' { const char* formatStr = "[ %s %s ]" ;
- $$ = (char*)malloc( strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ) ;
- sprintf( $$, formatStr, $3, $4 ) ;} ;
-  /*printf( "%s", $$ ) ; } ;*/
-       | '(' nonterminal word clause ')' { const char* formatStr = "[ %s %s ]" ;
- $$ = (char*)malloc( strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ) ;
- sprintf( $$, formatStr, $3, $4 ) ;} ;
-       | '(' nonterminal phrase word ')' { const char* formatStr = "[ %s %s ]" ;
- $$ = (char*)malloc( strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ) ;
- sprintf( $$, formatStr, $3, $4 ) ;} ;
-       | '(' nonterminal headphrase word ')' { const char* formatStr = "[ %s %s ]" ;
- $$ = (char*)malloc( strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ) ;
- sprintf( $$, formatStr, $3, $4 ) ;} ;
-       | '(' nonterminal clause word ')' { const char* formatStr = "[ %s %s ]" ;
- $$ = (char*)malloc( strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ) ;
- sprintf( $$, formatStr, $3, $4 ) ;} ;
-       | '(' nonterminal phrase clause ')' { const char* formatStr = "[ %s %s ]" ;
- $$ = (char*)malloc( strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ) ;
- sprintf( $$, formatStr, $3, $4 ) ;} ;
-	   | '(' nonterminal phrase headclause ')' { const char* formatStr = "[ %s %s ]" ;
- $$ = (char*)malloc( strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ) ;
- sprintf( $$, formatStr, $3, $4 ) ;} ;
-       | '(' nonterminal headphrase clause ')' { const char* formatStr = "[ %s %s ]" ;
- $$ = (char*)malloc( strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ) ;
- sprintf( $$, formatStr, $3, $4 ) ;} ;
-       | '(' nonterminal clause headphrase ')' { const char* formatStr = "[ %s %s ]" ;
- $$ = (char*)malloc( strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ) ;
- sprintf( $$, formatStr, $3, $4 ) ;} ;
-       | '(' nonterminal clause phrase ')' { const char* formatStr = "[ %s %s ]" ;
- $$ = (char*)malloc( strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ) ;
- sprintf( $$, formatStr, $3, $4 ) ;} ;
-	   | '(' nonterminal headclause phrase ')' { const char* formatStr = "[ %s %s ]" ;
- $$ = (char*)malloc( strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ) ;
- sprintf( $$, formatStr, $3, $4 ) ;} ;
+phrase : '(' nonterminal word phrase ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
+       | '(' nonterminal word headphrase ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
+       | '(' nonterminal word clause ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
+       | '(' nonterminal phrase word ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
+       | '(' nonterminal headphrase word ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
+       | '(' nonterminal clause word ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
+       | '(' nonterminal phrase clause ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
+       | '(' nonterminal phrase headclause ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
+       | '(' nonterminal headphrase clause ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
+       | '(' nonterminal clause headphrase ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
+       | '(' nonterminal clause phrase ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
+       | '(' nonterminal headclause phrase ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
        | '(' nonterminal word ')' { $$ = $3 ; } ;
-       | '(' nonterminal word word ')' { const char* formatStr = "[ %s %s ]" ;  // Two formatted arguments
-                                         $$ = (char*)malloc( strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ) ; // the magic number to use is 2 * number of printed arguments
-                                      sprintf( $$, formatStr, $3, $4 ) ;} ;
-										 /* printf( "%s", $$ ) ; } */
+       | '(' nonterminal word word ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
        | '(' nonterminal headphrase ')' { $$ = $3 ; } ;
        | '(' nonterminal phrase ')' { $$ = $3 ; } ;
        | '(' nonterminal clause ')' { $$ = $3 ; } ;
 	   | '(' nonterminal headclause ')' { $$ = $3 ; } ;
-       | '(' nonterminal headphrase phrase ')' { const char* formatStr = "[ %s %s ]" ;  // Two formatted arguments
-                                         $$ = (char*)malloc( strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ) ;
-					 sprintf( $$, formatStr, $3, $4 ) ;} ;
-       | '(' nonterminal phrase headphrase ')' { const char* formatStr = "[ %s %s ]" ;  // Two formatted arguments
-                                         $$ = (char*)malloc( strlen( formatStr ) + strlen( $3 ) + strlen( $4 ) - 4 ) ;
-					 sprintf( $$, formatStr, $3, $4 ) ;} ;
+       | '(' nonterminal headphrase phrase ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
+       | '(' nonterminal phrase headphrase ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
 
 /*phstart : '(' nonterminal ; */
 

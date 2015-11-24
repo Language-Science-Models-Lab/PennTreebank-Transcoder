@@ -4,8 +4,9 @@
 
 #include <cstdio>
 #include <iostream>
-
+#include <cstdarg>
 #include <string.h>
+#include <stdlib.h>
 
 using namespace std;
  
@@ -33,7 +34,7 @@ inline char* output( const char* format, int numArgs, ... ) {
   va_end( argCopy ) ;
 
   // Subtact the number of args to print * 2, the characters replaced in the format string
-  char* temp = (char*)malloc( strlen( format ) + argLengths - ( numArgs * 2 ) ) ;
+  char* temp = (char*)malloc( strlen( format ) + argLengths - ( numArgs * 2 ) + 1 ) ;
   vsprintf( temp, format, args ) ;
 
   va_end( args ) ;
@@ -76,43 +77,43 @@ headphrase : '@' phrase { $$ = $2 ; } ;
 
 headclause : '@' clause { $$ = $2 ; } ;
 
-clause : '(' s phrase headphrase ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
-       | '(' s phrase clause ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
-       | '(' s phrase headclause ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
+clause : '(' s phrase headphrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
+       | '(' s phrase clause ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
+       | '(' s phrase headclause ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
 	   | '(' s headphrase ')' { $$ = $3 ; }
-       | '(' s headphrase phrase ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
-       | '(' s headphrase clause ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
+       | '(' s headphrase phrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
+       | '(' s headphrase clause ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
        | '(' s phrase ')' { $$ = $3 ; } ;
        | '(' s clause ')' { $$ = $3 ; } ;
 	   | '(' s headclause ')' { $$ = $3 ; } ;
 	   | '(' s word ')' { $$ = $3 ; } ;
-       | '(' s word clause ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
-       | '(' s word headclause ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
-       | '(' s word phrase ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
-       | '(' s word headphrase ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
+       | '(' s word clause ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
+       | '(' s word headclause ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
+       | '(' s word phrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
+       | '(' s word headphrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
 
 /*clstart : '(' s ; */
 
-phrase : '(' nonterminal word phrase ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
-       | '(' nonterminal word headphrase ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
-       | '(' nonterminal word clause ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
-       | '(' nonterminal phrase word ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
-       | '(' nonterminal headphrase word ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
-       | '(' nonterminal clause word ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
-       | '(' nonterminal phrase clause ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
-       | '(' nonterminal phrase headclause ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
-       | '(' nonterminal headphrase clause ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
-       | '(' nonterminal clause headphrase ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
-       | '(' nonterminal clause phrase ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
-       | '(' nonterminal headclause phrase ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
+phrase : '(' nonterminal word phrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
+       | '(' nonterminal word headphrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
+       | '(' nonterminal word clause ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
+       | '(' nonterminal phrase word ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
+       | '(' nonterminal headphrase word ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
+       | '(' nonterminal clause word ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
+       | '(' nonterminal phrase clause ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
+       | '(' nonterminal phrase headclause ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
+       | '(' nonterminal headphrase clause ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
+       | '(' nonterminal clause headphrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
+       | '(' nonterminal clause phrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
+       | '(' nonterminal headclause phrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
        | '(' nonterminal word ')' { $$ = $3 ; } ;
-       | '(' nonterminal word word ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
+       | '(' nonterminal word word ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
        | '(' nonterminal headphrase ')' { $$ = $3 ; } ;
        | '(' nonterminal phrase ')' { $$ = $3 ; } ;
        | '(' nonterminal clause ')' { $$ = $3 ; } ;
 	   | '(' nonterminal headclause ')' { $$ = $3 ; } ;
-       | '(' nonterminal headphrase phrase ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
-       | '(' nonterminal phrase headphrase ')' { $$ = output( "[%s %s]\0", 2, $3, $4 ) ; } ;
+       | '(' nonterminal headphrase phrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
+       | '(' nonterminal phrase headphrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
 
 /*phstart : '(' nonterminal ; */
 

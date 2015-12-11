@@ -1,0 +1,15 @@
+
+(S (NP @(NNP @Elvis)) @(VP @(VBZ @is) (ADJP-PRD~ @(JJ @dead))) (. @.))
+
+# 'dead' should be parsed by 
+# phrase : '(' nonterminal word ')' { $$ = $3 ; } ;
+
+# 'is dead' should be parsed by
+# phrase : '(' nonterminal word phrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
+
+# 'Elvis' should be parsed by
+# phrase : '(' nonterminal word ')' { $$ = $3 ; } ;
+
+# 'Elvis is dead' should be parsed by
+# clause : '(' s phrase headphrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
+

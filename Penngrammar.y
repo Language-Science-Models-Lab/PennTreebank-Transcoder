@@ -5,8 +5,11 @@
 #include <cstdio>
 #include <iostream>
 #include <cstdarg>
-#include <string.h>
+#include <string>
 #include <stdlib.h>
+#include <stack>
+#include <map>
+#include <list>
 
 using namespace std;
  
@@ -14,6 +17,13 @@ extern "C" int yylex() ;
 extern "C" int yyparse() ;
 extern "C" FILE *yyin ;
 
+// Sets type info generation debugging flag
+#define TDEBUG
+// Uncomment undef here to turn off type info generation debugging messages
+//#undef TDEBUG
+ 
+#define SIZEOF_ARRAY( a ) ( sizeof( a ) / sizeof( a[ 0 ] ) )
+ 
 void yyerror( const char *msg ) {
   fprintf(stderr, "%s\n", msg) ;
 }
@@ -43,7 +53,33 @@ inline char* output( const char* format, int numArgs, ... ) {
 
 // Holds pointer to type information as parse happens like the $$ variable
 char* typeInfo ;
+
+// List of lefthand side rule names, if you add a new rule add the name to the list here to be able to use it in the grammar for generating type info!
+char const *ruleNames[] = { "start"
+						  , "eolf"
+						  , "headphrase"
+						  , "headclause"
+						  , "clause"
+						  , "phrase"
+						  , "word"
+						  , "subword"
+						  , "s"
+						  , "pause"
+						  , "terminal"
+						  , "nonterminal" } ;
  
+list <string> rules( ruleNames, ruleNames + SIZEOF_ARRAY( ruleNames ) );
+ 
+// Need a stack for each lefthand side name
+map < const string, stack <string> > rulestacks ;
+
+// Populate rulename to stack mapping
+void makeRuleStacks( list <string> ruleList ) {
+  for ( list<string>::iterator name = ruleList.begin() ; name != ruleList.end() ; ++name ) {
+	rulestacks.insert( pair< const string, stack <string> >( *name, stack <string>() ) ) ;
+  }
+}
+
 %}
 
 %union {
@@ -65,19 +101,40 @@ char* typeInfo ;
 %%
 
 /* Important not to check for start eolf, as $accept : start eof is the top level invisible rule!, see top of bison generated .output file */
-start : clause eolf { printf( "%s:\n", $1 ) ; } ;
-      | start clause eolf { printf("%s:\n", $2 ) ; } ;
+start : clause eolf { printf( "%s:%s\n", $1, rulestacks[ "clause" ].top().c_str() ) ;
+                      rulestacks[ "clause" ].pop() ; } ;
+      | start clause eolf { printf("%s:%s\n", $2, rulestacks[ "clause" ].top().c_str() ) ;
+                            rulestacks[ "clause" ].pop() ; } ;
 	  | eolf
 	  | start '\n' ;
 
 eolf : '\n'
      | "End of File" ;
 
-headphrase : '@' phrase { $$ = $2 ; } ;
+headphrase : '@' phrase { $$ = $2 ;
+                          rulestacks[ "headphrase" ].push( rulestacks[ "phrase" ].top().c_str() ) ;
+	                      rulestacks[ "phrase" ].pop() ;
+                          #ifdef TDEBUG
+						     printf( "in headphrase rule: top of stack is %s\n", rulestacks[ "headphrase" ].top().c_str() ) ;
+                          #endif
+                        } ;
 
-headclause : '@' clause { $$ = $2 ; } ;
+headclause : '@' clause { $$ = $2 ;
+                          rulestacks[ "headclause" ].push( rulestacks[ "clause" ].top().c_str() ) ;
+	                      rulestacks[ "clause" ].pop() ;
+                          #ifdef TDEBUG
+						     printf( "in headclause rule: top of stack is %s\n", rulestacks[ "headclause" ].top().c_str() ) ;
+						  #endif
+                        } ;
 
-clause : '(' s phrase headphrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
+clause : '(' s phrase headphrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ;
+                                       rulestacks[ "clause" ].push( output( "type(%s@%s, s)", 2, rulestacks[ "headphrase" ].top().c_str(), rulestacks[ "phrase" ].top().c_str() ) ) ;
+                                       rulestacks[ "headphrase" ].pop() ;
+		                               rulestacks[ "phrase" ].pop() ;
+                                       #ifdef TDEBUG
+									      printf( "in clause rule 1: top of stack is %s\n", rulestacks[ "clause" ].top().c_str() ) ;
+							           #endif
+                                     } ;
        | '(' s phrase clause ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
        | '(' s phrase headclause ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
 	   | '(' s headphrase ')' { $$ = $3 ; }
@@ -94,7 +151,14 @@ clause : '(' s phrase headphrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
 
 /*clstart : '(' s ; */
 
-phrase : '(' nonterminal word phrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
+phrase : '(' nonterminal word phrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ;
+                                           rulestacks[ "phrase" ].push( output( "type(%s@%s)", 2, rulestacks[ "word" ].top().c_str(), rulestacks[ "phrase" ].top().c_str() ) ) ;
+                                           rulestacks[ "word" ].pop() ;
+		                                   rulestacks[ "phrase" ].pop() ;
+										   #ifdef TDEBUG
+                                              printf( "in phrase rule 1: top of stack is %s\n", rulestacks[ "phrase" ].top().c_str() ) ;
+                                           #endif
+                                         } ;
        | '(' nonterminal word headphrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
        | '(' nonterminal word clause ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
        | '(' nonterminal phrase word ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
@@ -106,7 +170,13 @@ phrase : '(' nonterminal word phrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ;
        | '(' nonterminal clause headphrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
        | '(' nonterminal clause phrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
        | '(' nonterminal headclause phrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
-       | '(' nonterminal word ')' { $$ = $3 ; } ;
+       | '(' nonterminal word ')' { $$ = $3 ;
+                                    rulestacks[ "phrase" ].push( output( "type(%s, _)", 1, rulestacks[ "word" ].top().c_str() ) ) ;
+		                            rulestacks[ "word" ].pop() ;
+									#ifdef TDEBUG
+		                               printf( "in phrase rule 13: top of stack is %s\n", rulestacks[ "phrase" ].top().c_str() ) ;
+		                            #endif
+		                          } ;
        | '(' nonterminal word word ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
        | '(' nonterminal headphrase ')' { $$ = $3 ; } ;
        | '(' nonterminal phrase ')' { $$ = $3 ; } ;
@@ -117,23 +187,45 @@ phrase : '(' nonterminal word phrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ;
 
 /*phstart : '(' nonterminal ; */
 
-word : '@' subword { $$ = $2 ; }
-| subword { $$ = $1 ; }
+word : '@' subword { $$ = $2 ;
+                     rulestacks[ "word" ].push( rulestacks[ "subword" ].top().c_str() ) ;
+                     rulestacks[ "subword" ].pop() ;
+					 #ifdef TDEBUG
+                        printf( "in word rule 1: top of stack is %s\n", rulestacks[ "word" ].top().c_str() ) ;
+                     #endif
+                   } ;
+     | subword { $$ = $1 ;
+                 rulestacks[ "word" ].push( rulestacks[ "subword" ].top().c_str() ) ;
+	             rulestacks[ "subword" ].pop() ;
+				 #ifdef TDEBUG
+	                printf( "in word rule 2: top of stack is %s\n", rulestacks[ "word" ].top().c_str() ) ;
+	             #endif
+	   } ;
 
-subword : '(' pos '@' terminal ')' { $$ = $4 ; } ;
+subword : '(' pos '@' terminal ')' { $$ = $4 ;
+                                     rulestacks[ "subword" ].push( output( "type(%s, _)", 1, rulestacks[ "terminal" ].top().c_str() ) ) ;
+                                     rulestacks[ "terminal" ].pop() ;
+									 #ifdef TDEBUG
+                                        printf( "in subword rule: top of stack is %s\n", rulestacks[ "subword" ].top().c_str() ) ;
+                                     #endif
+                                   } ;
 
 s : S_TOKEN {} ;
 
 pos : POS_TOKEN {} ;
 
-terminal : TERMINAL_TOKEN {} ;
+terminal : TERMINAL_TOKEN { rulestacks[ "terminal" ].push( $1 ) ;
+                            #ifdef TDEBUG
+                               printf( "in terminal rule: top of stack is %s\n", rulestacks[ "terminal" ].top().c_str() ) ;
+                            #endif
+                          } ;
 
 nonterminal : NON_TERMINAL_TOKEN {} ;
 
 %%
 
 int main(int argc, char** argv) {
-	// open a file handle to given file:
+  // open a file handle to given file:
   if ( argc > 1 ) {
 	FILE *myfile = fopen( argv[1], "r");
 	// make sure it is valid:
@@ -146,6 +238,9 @@ int main(int argc, char** argv) {
 	// set debugger to trace to stderr; redirect to errorlog if desired
 	yydebug = DEBUG;
 
+	// Configure the rule stacks	
+	makeRuleStacks( rules ) ;
+	
 	// parse through the input until there is no more:
 	do {
 		yyparse();

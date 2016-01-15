@@ -54,6 +54,9 @@ inline char* output( const char* format, int numArgs, ... ) {
 // Holds pointer to type information as parse happens like the $$ variable
 char* typeInfo ;
 
+// Holds the built string for pushing on a rulestack before popping
+char* result ;
+
 // List of lefthand side rule names, if you add a new rule add the name to the list here to be able to use it in the grammar for generating type info!
 char const *ruleNames[] = { "start"
 						  , "eolf"
@@ -128,9 +131,11 @@ headclause : '@' clause { $$ = $2 ;
                         } ;
 
 clause : '(' s phrase headphrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ;
-                                       rulestacks[ "clause" ].push( output( "type(%s@%s, s)", 2, rulestacks[ "headphrase" ].top().c_str(), rulestacks[ "phrase" ].top().c_str() ) ) ;
-                                       rulestacks[ "headphrase" ].pop() ;
+                                       result = output( "type(%s@%s, s)", 2, rulestacks[ "headphrase" ].top().c_str(), rulestacks[ "phrase" ].top().c_str() ) ;
+    								   rulestacks[ "headphrase" ].pop() ;
 		                               rulestacks[ "phrase" ].pop() ;
+                                       rulestacks[ "clause" ].push( result ) ;
+                                      
                                        #ifdef TDEBUG
 									      printf( "in clause rule 1: top of stack is %s\n", rulestacks[ "clause" ].top().c_str() ) ;
 							           #endif
@@ -152,38 +157,112 @@ clause : '(' s phrase headphrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ;
 /*clstart : '(' s ; */
 
 phrase : '(' nonterminal word phrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ;
-                                           rulestacks[ "phrase" ].push( output( "type(%s@%s)", 2, rulestacks[ "word" ].top().c_str(), rulestacks[ "phrase" ].top().c_str() ) ) ;
+                                           result = output( "type(%s@%s, _)", 2, rulestacks[ "word" ].top().c_str(), rulestacks[ "phrase" ].top().c_str() ) ;
                                            rulestacks[ "word" ].pop() ;
-		                                   rulestacks[ "phrase" ].pop() ;
+		                                   rulestacks[ "phrase" ].pop() ;               
+                                           rulestacks[ "phrase" ].push( result ) ;
+                                       
 										   #ifdef TDEBUG
                                               printf( "in phrase rule 1: top of stack is %s\n", rulestacks[ "phrase" ].top().c_str() ) ;
                                            #endif
                                          } ;
-       | '(' nonterminal word headphrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
-       | '(' nonterminal word clause ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
-       | '(' nonterminal phrase word ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
-       | '(' nonterminal headphrase word ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
-       | '(' nonterminal clause word ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
-       | '(' nonterminal phrase clause ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
-       | '(' nonterminal phrase headclause ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
-       | '(' nonterminal headphrase clause ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
-       | '(' nonterminal clause headphrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
-       | '(' nonterminal clause phrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
-       | '(' nonterminal headclause phrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
+       | '(' nonterminal word headphrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ;
+                                               #ifdef TDEBUG
+                                                  printf( "in phrase rule 2: top of stack is %s\n", rulestacks[ "phrase" ].top().c_str() ) ;
+                                               #endif
+		                                       } ;
+       | '(' nonterminal word clause ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ;
+											   #ifdef TDEBUG
+                                                  printf( "in phrase rule 3: top of stack is %s\n", rulestacks[ "phrase" ].top().c_str() ) ;
+                                               #endif
+											  } ;
+       | '(' nonterminal phrase word ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ;
+											   #ifdef TDEBUG
+                                                  printf( "in phrase rule 4: top of stack is %s\n", rulestacks[ "phrase" ].top().c_str() ) ;
+                                               #endif
+											  } ;
+       | '(' nonterminal headphrase word ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ;
+											   #ifdef TDEBUG
+                                                  printf( "in phrase rule 5: top of stack is %s\n", rulestacks[ "phrase" ].top().c_str() ) ;
+                                               #endif
+											  } ;
+       | '(' nonterminal clause word ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ;
+											   #ifdef TDEBUG
+                                                  printf( "in phrase rule 6: top of stack is %s\n", rulestacks[ "phrase" ].top().c_str() ) ;
+                                               #endif
+											  } ;
+       | '(' nonterminal phrase clause ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ;
+											   #ifdef TDEBUG
+                                                  printf( "in phrase rule 7: top of stack is %s\n", rulestacks[ "phrase" ].top().c_str() ) ;
+                                               #endif
+											  } ;
+       | '(' nonterminal phrase headclause ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ;
+											   #ifdef TDEBUG
+                                                  printf( "in phrase rule 8: top of stack is %s\n", rulestacks[ "phrase" ].top().c_str() ) ;
+                                               #endif
+											  } ;
+       | '(' nonterminal headphrase clause ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ;
+											     #ifdef TDEBUG
+                                                    printf( "in phrase rule 9: top of stack is %s\n", rulestacks[ "phrase" ].top().c_str() ) ;
+                                                 #endif
+											  } ;
+       | '(' nonterminal clause headphrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ;
+											     #ifdef TDEBUG
+                                                    printf( "in phrase rule 10: top of stack is %s\n", rulestacks[ "phrase" ].top().c_str() ) ;
+                                                 #endif
+											  } ;
+       | '(' nonterminal clause phrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ;
+											     #ifdef TDEBUG
+                                                    printf( "in phrase rule 11: top of stack is %s\n", rulestacks[ "phrase" ].top().c_str() ) ;
+                                                 #endif
+											  } ;
+       | '(' nonterminal headclause phrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ;
+											     #ifdef TDEBUG
+                                                    printf( "in phrase rule 12: top of stack is %s\n", rulestacks[ "phrase" ].top().c_str() ) ;
+                                                 #endif
+									           } ;
        | '(' nonterminal word ')' { $$ = $3 ;
-                                    rulestacks[ "phrase" ].push( output( "type(%s, _)", 1, rulestacks[ "word" ].top().c_str() ) ) ;
+                                    rulestacks[ "phrase" ].push( output( "%s", 1, rulestacks[ "word" ].top().c_str() ) ) ;
 		                            rulestacks[ "word" ].pop() ;
 									#ifdef TDEBUG
 		                               printf( "in phrase rule 13: top of stack is %s\n", rulestacks[ "phrase" ].top().c_str() ) ;
 		                            #endif
 		                          } ;
-       | '(' nonterminal word word ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
-       | '(' nonterminal headphrase ')' { $$ = $3 ; } ;
-       | '(' nonterminal phrase ')' { $$ = $3 ; } ;
-       | '(' nonterminal clause ')' { $$ = $3 ; } ;
-	   | '(' nonterminal headclause ')' { $$ = $3 ; } ;
-       | '(' nonterminal headphrase phrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
-       | '(' nonterminal phrase headphrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
+       | '(' nonterminal word word ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ;
+										 #ifdef TDEBUG
+                                            printf( "in phrase rule 14: top of stack is %s\n", rulestacks[ "phrase" ].top().c_str() ) ;
+                                         #endif
+									 } ;
+       | '(' nonterminal headphrase ')' { $$ = $3 ;
+										  #ifdef TDEBUG
+                                             printf( "in phrase rule 15: top of stack is %s\n", rulestacks[ "phrase" ].top().c_str() ) ;
+                                          #endif
+									 } ;
+       | '(' nonterminal phrase ')' { $$ = $3 ;
+									  #ifdef TDEBUG
+                                         printf( "in phrase rule 16: top of stack is %s\n", rulestacks[ "phrase" ].top().c_str() ) ;
+                                      #endif
+									 } ;
+       | '(' nonterminal clause ')' { $$ = $3 ;
+									  #ifdef TDEBUG
+                                         printf( "in phrase rule 17: top of stack is %s\n", rulestacks[ "phrase" ].top().c_str() ) ;
+                                      #endif
+									 } ;
+	   | '(' nonterminal headclause ')' { $$ = $3 ;
+										  #ifdef TDEBUG
+                                             printf( "in phrase rule 18: top of stack is %s\n", rulestacks[ "phrase" ].top().c_str() ) ;
+                                          #endif
+										 } ;
+       | '(' nonterminal headphrase phrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ;
+										     	 #ifdef TDEBUG
+                                                    printf( "in phrase rule 19: top of stack is %s\n", rulestacks[ "phrase" ].top().c_str() ) ;
+                                                 #endif
+											     } ;
+       | '(' nonterminal phrase headphrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ;
+											     #ifdef TDEBUG
+                                                    printf( "in phrase rule 20: top of stack is %s\n", rulestacks[ "phrase" ].top().c_str() ) ;
+                                                 #endif
+											    } ;
 
 /*phstart : '(' nonterminal ; */
 

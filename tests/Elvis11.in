@@ -1,0 +1,7 @@
+
+(S @(NNP @Elvis) (S (NP @(NNP @Elvis)) @(VP @(VBZ @is) (ADJP-PRD~ @(JJ @dead)))) (. @.))
+
+# tests phrase rules 1 and 13
+# tests clause rules 1 and 11
+
+# note the test sentences are not necessarily grammatical English and would not be found in the actual Treebank 

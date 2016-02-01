@@ -1,0 +1,7 @@
+
+(S @(NP @(NNP @Elvis)) (VP @(VBZ @is) (ADJP-PRD~ @(JJ @dead))) (. @.))
+
+# tests phrase rules 1 and 13
+# tests clause rule 5
+
+

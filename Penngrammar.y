@@ -186,18 +186,45 @@ clause : '(' s phrase headphrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ;
 	   | '(' s headclause ')' { $$ = $3 ; } ;
 	   | '(' s word ')' { $$ = $3 ; } ;
        | '(' s word clause ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ;
-                                 result = output( "type(%s@%s, s)", 2, rulestacks[ "clause" ].top().c_str(), rulestacks[ "word" ].top().c_str() ) ;
-                                                             rulestacks[ "word" ].pop() ;
-		                               rulestacks[ "clause" ].pop() ;
+                                 result = output( "type(%s@%s, s)", 2, rulestacks[ "word" ].top().c_str(), rulestacks[ "clause" ].top().c_str() ) ;
+                                                             rulestacks[ "clause" ].pop() ;
+		                               rulestacks[ "word" ].pop() ;
                                        rulestacks[ "clause" ].push( result ) ;
 
                                        #ifdef TDEBUG
 									      printf( "in clause rule 11: top of stack is %s\n", rulestacks[ "clause" ].top().c_str() ) ;
 							           #endif
  } ;
-       | '(' s word headclause ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
-       | '(' s word phrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
-       | '(' s word headphrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ; } ;
+       | '(' s word headclause ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ;
+                                     result = output( "type(%s@%s, s)", 2, rulestacks[ "headclause" ].top().c_str(), rulestacks[ "word" ].top().c_str() ) ;
+                                                             rulestacks[ "word" ].pop() ;
+		                               rulestacks[ "headclause" ].pop() ;
+                                       rulestacks[ "clause" ].push( result ) ;
+
+                                       #ifdef TDEBUG
+									      printf( "in clause rule 12: top of stack is %s\n", rulestacks[ "clause" ].top().c_str() ) ;
+							           #endif
+ } ;
+       | '(' s word phrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ;
+                                 result = output( "type(%s@%s, s)", 2, rulestacks[ "word" ].top().c_str(), rulestacks[ "phrase" ].top().c_str() ) ;
+                                                             rulestacks[ "phrase" ].pop() ;
+		                               rulestacks[ "word" ].pop() ;
+                                       rulestacks[ "clause" ].push( result ) ;
+
+                                       #ifdef TDEBUG
+									      printf( "in clause rule 13: top of stack is %s\n", rulestacks[ "clause" ].top().c_str() ) ;
+                                                                   #endif
+ } ;
+       | '(' s word headphrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ;
+                                     result = output( "type(%s@%s, s)", 2, rulestacks[ "headphrase" ].top().c_str(), rulestacks[ "word" ].top().c_str() ) ;
+                                                             rulestacks[ "word" ].pop() ;
+		                               rulestacks[ "headphrase" ].pop() ;
+                                       rulestacks[ "clause" ].push( result ) ;
+
+                                       #ifdef TDEBUG
+									      printf( "in clause rule 14: top of stack is %s\n", rulestacks[ "clause" ].top().c_str() ) ;
+                                                                   #endif
+ } ;
 
 /*clstart : '(' s ; */
 

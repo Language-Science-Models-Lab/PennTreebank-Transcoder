@@ -5,3 +5,25 @@
 # tests clause rules 1 and 6
 
 # note the test sentences are not necessarily grammatical English and would not be found in the actual Treebank 
+
+# debug output expected
+# in terminal rule: top of stack is Elvis
+# in subword rule: top of stack is type(Elvis, _)
+# in word rule 1: top of stack is type(Elvis, _)
+# in phrase rule 13: top of stack is type(Elvis, _)
+# in headphrase rule: top of stack is type(Elvis, _)
+# in terminal rule: top of stack is Elvis
+# in subword rule: top of stack is type(Elvis, _)
+# in word rule 1: top of stack is type(Elvis, _)
+# in phrase rule 13: top of stack is type(Elvis, _)
+# in terminal rule: top of stack is is
+# in subword rule: top of stack is type(is, _)
+# in word rule 1: top of stack is type(is, _)
+# in terminal rule: top of stack is dead
+# in subword rule: top of stack is type(dead, _)
+# in word rule 1: top of stack is type(dead, _)
+# in phrase rule 13: top of stack is type(dead, _)
+# in phrase rule 1: top of stack is type(type(is, _)@type(dead, _), _)
+# in headphrase rule: top of stack is type(type(is, _)@type(dead, _), _)
+# in clause rule 1: top of stack is type(type(type(is, _)@type(dead, _), _)@type(Elvis, _), s)
+# in clause rule 6: top of stack is type(type(Elvis, _)@type(type(type(is, _)@type(dead, _), _)@type(Elvis, _), s), s)

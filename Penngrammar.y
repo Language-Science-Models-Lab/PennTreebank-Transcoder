@@ -349,26 +349,39 @@ phrase : '(' nonterminal word phrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ;
 		                            #endif
 		                          } ;
        | '(' nonterminal word word ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ;
+
 										 #ifdef TDEBUG
                                             printf( "in phrase rule 14: top of stack is %s\n", rulestacks[ "phrase" ].top().c_str() ) ;
                                          #endif
 									 } ;
        | '(' nonterminal headphrase ')' { $$ = $3 ;
+                                    rulestacks[ "phrase" ].push( output( "%s", 1, rulestacks[ "headphrase" ].top().c_str() ) ) ;
+		                            rulestacks[ "headphrase" ].pop() ;
+
 										  #ifdef TDEBUG
                                              printf( "in phrase rule 15: top of stack is %s\n", rulestacks[ "phrase" ].top().c_str() ) ;
                                           #endif
 									 } ;
        | '(' nonterminal phrase ')' { $$ = $3 ;
+                                    rulestacks[ "phrase" ].push( output( "%s", 1, rulestacks[ "phrase" ].top().c_str() ) ) ;
+		                            rulestacks[ "phrase" ].pop() ;
+
 									  #ifdef TDEBUG
                                          printf( "in phrase rule 16: top of stack is %s\n", rulestacks[ "phrase" ].top().c_str() ) ;
                                       #endif
 									 } ;
        | '(' nonterminal clause ')' { $$ = $3 ;
+                                    rulestacks[ "phrase" ].push( output( "%s", 1, rulestacks[ "clause" ].top().c_str() ) ) ;
+		                            rulestacks[ "clause" ].pop() ;
+
 									  #ifdef TDEBUG
                                          printf( "in phrase rule 17: top of stack is %s\n", rulestacks[ "phrase" ].top().c_str() ) ;
                                       #endif
 									 } ;
 	   | '(' nonterminal headclause ')' { $$ = $3 ;
+                                    rulestacks[ "phrase" ].push( output( "%s", 1, rulestacks[ "headclause" ].top().c_str() ) ) ;
+		                            rulestacks[ "headclause" ].pop() ;
+
 										  #ifdef TDEBUG
                                              printf( "in phrase rule 18: top of stack is %s\n", rulestacks[ "phrase" ].top().c_str() ) ;
                                           #endif

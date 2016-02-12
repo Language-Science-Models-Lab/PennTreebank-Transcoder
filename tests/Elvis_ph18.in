@@ -1,0 +1,29 @@
+
+(S (NP @(NNP @Elvis)) @(VP @(S (NP @(NNP @Elvis)) @(VP @(VBZ @is) (ADJP-PRD~ @(JJ @dead))))) (. @.))
+
+# tests phrase rules 1 and 18
+# tests clause rule 1
+
+# in terminal rule: top of stack is Elvis
+# in subword rule: top of stack is type(Elvis, _)
+# in word rule 1: top of stack is type(Elvis, _)
+# in phrase rule 13: top of stack is type(Elvis, _)
+# in terminal rule: top of stack is Elvis
+# in subword rule: top of stack is type(Elvis, _)
+# in word rule 1: top of stack is type(Elvis, _)
+# in phrase rule 13: top of stack is type(Elvis, _)
+# in terminal rule: top of stack is is
+# in subword rule: top of stack is type(is, _)
+# in word rule 1: top of stack is type(is, _)
+# in terminal rule: top of stack is dead
+# in subword rule: top of stack is type(dead, _)
+# in word rule 1: top of stack is type(dead, _)
+# in phrase rule 13: top of stack is type(dead, _)
+# in phrase rule 1: top of stack is type(type(is, _)@type(dead, _), _)
+# in headphrase rule: top of stack is type(type(is, _)@type(dead, _), _)
+# in clause rule 1: top of stack is type(type(type(is, _)@type(dead, _), _)@type(Elvis, _), s)
+# in headclause rule: top of stack is type(type(type(is, _)@type(dead, _), _)@type(Elvis, _), s)
+# in phrase rule 18: top of stack is type(type(type(is, _)@type(dead, _), _)@type(Elvis, _), s)
+# in headphrase rule: top of stack is type(type(type(is, _)@type(dead, _), _)@type(Elvis, _), s)
+# in clause rule 1: top of stack is type(type(type(type(is, _)@type(dead, _), _)@type(Elvis, _), s)@type(Elvis, _), s)
+

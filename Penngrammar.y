@@ -349,6 +349,12 @@ phrase : '(' nonterminal word phrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ;
 		                            #endif
 		                          } ;
        | '(' nonterminal word word ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ;
+                                         const char* tword = rulestacks[ "word" ].top().c_str() ;
+										 rulestacks[ "word" ].pop() ;
+										 const char* bword = rulestacks[ "word" ].top().c_str() ;
+										 rulestacks[ "word" ].pop() ;
+                                         result = output( "type(%s@%s, _)", 2, tword, bword ) ;               
+                                         rulestacks[ "phrase" ].push( result ) ;	
 
 										 #ifdef TDEBUG
                                             printf( "in phrase rule 14: top of stack is %s\n", rulestacks[ "phrase" ].top().c_str() ) ;

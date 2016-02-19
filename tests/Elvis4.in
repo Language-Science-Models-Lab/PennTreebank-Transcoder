@@ -1,7 +1,7 @@
 
-(S (VP @(VBZ @is) (ADJP-PRD~ @(JJ @dead))) (. @.))
+(S @(VP @(VBZ @is) (ADJP-PRD~ @(JJ @dead))) (. @.))
 
-# tests clause rule 7
+# tests clause rule 4
 
 # in terminal rule: top of stack is is
 # in subword rule: top of stack is type(is, _)
@@ -11,7 +11,8 @@
 # in word rule 1: top of stack is type(dead, _)
 # in phrase rule 13: top of stack is type(dead, _)
 # in phrase rule 1: top of stack is type(type(is, _)@type(dead, _), _)
-# in clause rule 7: top of stack is type(type(type(is, _)@type(dead, _), _), s)
+# in headphrase rule: top of stack is type(type(is, _)@type(dead, _), _)
+# in clause rule 4: top of stack is type(type(type(is, _)@type(dead, _), _), s)
 
 
 

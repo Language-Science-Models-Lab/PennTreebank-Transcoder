@@ -21,10 +21,16 @@ linux: Penngrammar.tab.c lex.yy.c
 	g++ Penngrammar.tab.c lex.yy.c -lfl -o ptrans -DDEBUG=0
 
 osx-debug: Penngrammar.tab.c lex.yy.c
-	g++ Penngrammar.tab.c lex.yy.c -ll -o ptrans -DDEBUG=1
+	g++ Penngrammar.tab.c lex.yy.c -ll -o ptrans -DDEBUG=1 -DTDEBUG=1
 
 linux-debug: Penngrammar.tab.c lex.yy.c
-	g++ Penngrammar.tab.c lex.yy.c -lfl -o ptrans -DDEBUG=1
+	g++ Penngrammar.tab.c lex.yy.c -lfl -o ptrans -DDEBUG=1 -DTDEBUG=1
+
+osx-tdebug: Penngrammar.tab.c lex.yy.c
+	g++ Penngrammar.tab.c lex.yy.c -ll -o ptrans -DDEBUG=0 -DTDEBUG=1
+
+linux-tdebug: Penngrammar.tab.c lex.yy.c
+	g++ Penngrammar.tab.c lex.yy.c -lfl -o ptrans -DDEBUG=0 -DTDEBUG=1
 
 #penntransform.o: penntransform.c penntransform.tab.h
 #.SUFFIXES:	.pgm .l .y .c

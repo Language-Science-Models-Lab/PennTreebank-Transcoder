@@ -16,11 +16,6 @@ using namespace std;
 extern "C" int yylex() ;
 extern "C" int yyparse() ;
 extern "C" FILE *yyin ;
-
-// Sets type info generation debugging flag
-#define TDEBUG
-// Uncomment undef here to turn off type info generation debugging messages
-//#undef TDEBUG
  
 #define SIZEOF_ARRAY( a ) ( sizeof( a ) / sizeof( a[ 0 ] ) )
  

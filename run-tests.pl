@@ -9,10 +9,10 @@
 use strict;
 use warnings;
 use File::Slurp ;
-use String::Diff qw( diff );
 
 my $testdir = 'tests';
 my $failcount = 0;
+my $goodcount = 0;
 my $bar = "----------------\n";
 my $exename = "ptrans" ;
 
@@ -64,25 +64,33 @@ while (my $infile = readdir(DIR)) {
   
   my $transformOutput = `./ptrans $testdir/$infile` ;
 
-  my( $got, $expected ) = String::Diff::diff( $transformOutput, $outfileData ) ;
+  my $diff = $transformOutput ^ $outfileData ;
 
-  if ( $got ne $expected ) {
-	print "FAIL!\n\n" ;
-	print "We got:\n\n$got\n" ;
-	print "We expected:\n\n$expected\n" ;
+  my $diffsum = unpack( "%W*", $diff ) ;
+
+  if ( $diffsum != 0 ) {
+	print "TEST FAILED!\n\n" ;
+	$diff =~ s/./ord $& ? '^' : ' '/ge;
+#	print "Transformed:\n\n$transformOutput\n";
+#	print "Expected   :\n\n$outfileData\n\n" ;	
+#	print "Difference :\n\n$diff\n\n" ;	
+	print "$_\n" for $transformOutput, $outfileData, $diff;
 	$failcount++ ;
+	print "\n\n" ;
   } else {
+	$goodcount++ ;
 	print "OK\n" ;
   }
 }
 
 print "$bar";
-print "Finished testing, " ;
+print "Finished testing:\n" ;
 
 if ( $failcount == 0 ) {
   print "all tests Passed.\n" ;
 } else {
   print "$failcount tests Failed.\n" ;
+  print "$goodcount tests Passed.\n" ;
 }
 
 closedir(DIR);

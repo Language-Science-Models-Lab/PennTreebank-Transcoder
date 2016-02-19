@@ -1,0 +1,9 @@
+
+(S (S (NP @(NNP @Elvis)) @(VP @(VBZ @is) (ADJP-PRD~ @(JJ @dead)))) (. @.))
+
+# tests clause rule 8
+
+
+
+
+

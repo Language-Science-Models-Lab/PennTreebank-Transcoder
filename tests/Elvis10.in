@@ -1,0 +1,11 @@
+
+(S @(NNP @Elvis) (. @.))
+
+# tests clause rule 10
+
+# in terminal rule: top of stack is Elvis
+# in subword rule: top of stack is type(Elvis, _)
+# in word rule 1: top of stack is type(Elvis, _)
+# in clause rule 10: top of stack is type(type(Elvis, _), s)
+
+

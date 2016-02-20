@@ -1,7 +1,7 @@
 
-(S (S (NP @(NNP @Elvis)) @(VP @(VBZ @is) (ADJP-PRD~ @(JJ @dead)))) (. @.))
+(S @(S (NP @(NNP @Elvis)) @(VP @(VBZ @is) (ADJP-PRD~ @(JJ @dead)))) (. @.))
 
-# tests clause rule 8
+# tests clause rule 9
 
 # in terminal rule: top of stack is Elvis
 # in subword rule: top of stack is type(Elvis, _)
@@ -17,8 +17,8 @@
 # in phrase rule 1: top of stack is type(type(is, _)@type(dead, _), _)
 # in headphrase rule: top of stack is type(type(is, _)@type(dead, _), _)
 # in clause rule 1: top of stack is type(type(type(is, _)@type(dead, _), _)@type(Elvis, _), s)
-# in clause rule 8: top of stack is type(type(type(type(is, _)@type(dead, _), _)@type(Elvis, _), s), s)
-
+# in headclause rule: top of stack is type(type(type(is, _)@type(dead, _), _)@type(Elvis, _), s)
+# in clause rule 9: top of stack is type(type(type(type(is, _)@type(dead, _), _)@type(Elvis, _), s), s)
 
 
 

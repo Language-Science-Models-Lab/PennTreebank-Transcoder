@@ -1,15 +1,13 @@
 
-(S @(NNP @Elvis) (S (NP @(NNP @Elvis)) @(VP @(VBZ @is) (ADJP-PRD~ @(JJ @dead)))) (. @.))
+(S (NP @(NNP @Elvis)) @(VP @(S (NP @(NNP @Elvis)) @(VP @(VBZ @is) (ADJP-PRD~ @(JJ @dead))))) (. @.))
 
-# tests phrase rules 1 and 13
-# tests clause rules 1 and 11
+# tests phrase rules 1 and 17
+# tests clause rule 1
 
-# note the test sentences are not necessarily grammatical English and would not be found in the actual Treebank 
-
-# debug output expected
 # in terminal rule: top of stack is Elvis
 # in subword rule: top of stack is type(Elvis, _)
 # in word rule 1: top of stack is type(Elvis, _)
+# in phrase rule 13: top of stack is type(Elvis, _)
 # in terminal rule: top of stack is Elvis
 # in subword rule: top of stack is type(Elvis, _)
 # in word rule 1: top of stack is type(Elvis, _)
@@ -24,4 +22,7 @@
 # in phrase rule 1: top of stack is type(type(is, _)@type(dead, _), _)
 # in headphrase rule: top of stack is type(type(is, _)@type(dead, _), _)
 # in clause rule 1: top of stack is type(type(type(is, _)@type(dead, _), _)@type(Elvis, _), s)
-# in clause rule 11: top of stack is type(type(Elvis, _)@type(type(type(is, _)@type(dead, _), _)@type(Elvis, _), s), s)
+# in phrase rule 17: top of stack is type(type(type(is, _)@type(dead, _), _)@type(Elvis, _), s)
+# in headphrase rule: top of stack is type(type(type(is, _)@type(dead, _), _)@type(Elvis, _), s)
+# in clause rule 1: top of stack is type(type(type(type(is, _)@type(dead, _), _)@type(Elvis, _), s)@type(Elvis, _), s)
+

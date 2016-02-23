@@ -1,9 +1,9 @@
 %{
 // Parser file to convert Penn Treebank into lambek calculus
 // by Joseph Nunn and Sean Fulop, 2015
-
+  
+#include <iostream> //Must include for building on OSX
 #include <cstdio>
-#include <iostream>
 #include <cstdarg>
 #include <cstring>
 #include <stdlib.h>
@@ -106,7 +106,7 @@ start : clause eolf { printf( "%s:%s\n", $1, rulestacks[ "clause" ].top().c_str(
 	  | eolf
 	  | start '\n' ;
 
-eolf : '\n'
+eolf : '\n' { $$ = (char*)"\n" ; }
      | "End of File" ;
 
 headphrase : '@' phrase { $$ = $2 ;
@@ -489,7 +489,7 @@ int main(int argc, char** argv) {
 	FILE *myfile = fopen( argv[1], "r");
 	// make sure it is valid:
 	if (!myfile) {
-		cout << "I can't open file!" << endl;
+	  printf( "Can't open input file!" ) ;
 		return -1;
 	}
 	// set flex to read from it instead of defaulting to STDIN:

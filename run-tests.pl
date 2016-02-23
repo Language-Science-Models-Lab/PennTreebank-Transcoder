@@ -16,9 +16,11 @@ my $goodcount = 0;
 my $bar = "----------------\n";
 my $exename = "ptrans" ;
 
+print "Making Clean\n";
+my $compileResult = `make clean` ;
 print "Testing Compile\n";
 print $bar ;
-my $compileResult = `make` ;
+$compileResult = `make` ;
 print $bar ;
 print "Compilation Results:\n" ;
 print "$compileResult\n" ;

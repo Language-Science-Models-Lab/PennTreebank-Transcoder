@@ -1,7 +1,7 @@
 
 # Makefile for Penn treebank transformer
 
-CC = gcc -g
+CXX = g++
 
 all: osx
 
@@ -15,23 +15,26 @@ lex.yy.c: Pennlexer.l Penngrammar.tab.h
 	flex -l Pennlexer.l
 
 osx: Penngrammar.tab.c lex.yy.c
-	g++ Penngrammar.tab.c lex.yy.c -ll -o ptrans -DDEBUG=0
+	${CXX} -O3 Penngrammar.tab.c lex.yy.c -ll -o ptrans -DDEBUG=0
 
 linux: Penngrammar.tab.c lex.yy.c
-	g++ Penngrammar.tab.c lex.yy.c -lfl -o ptrans -DDEBUG=0
+	${CXX} -O3 Penngrammar.tab.c lex.yy.c -lfl -o ptrans -DDEBUG=0
 
 osx-debug: Penngrammar.tab.c lex.yy.c
-	g++ Penngrammar.tab.c lex.yy.c -ll -o ptrans -DDEBUG=1 -DTDEBUG=1
+	${CXX} -g Penngrammar.tab.c lex.yy.c -ll -o ptrans -DDEBUG=1 -DTDEBUG=1
 
 linux-debug: Penngrammar.tab.c lex.yy.c
-	g++ Penngrammar.tab.c lex.yy.c -lfl -o ptrans -DDEBUG=1 -DTDEBUG=1
+	${CXX} -g Penngrammar.tab.c lex.yy.c -lfl -o ptrans -DDEBUG=1 -DTDEBUG=1
 
-osx-tdebug: Penngrammar.tab.c lex.yy.c
-	g++ Penngrammar.tab.c lex.yy.c -ll -o ptrans -DDEBUG=0 -DTDEBUG=1
+osx-trace: Penngrammar.tab.c lex.yy.c
+	${CXX} -O3 Penngrammar.tab.c lex.yy.c -ll -o ptrans -DDEBUG=0 -DTDEBUG=1
 
-linux-tdebug: Penngrammar.tab.c lex.yy.c
-	g++ Penngrammar.tab.c lex.yy.c -lfl -o ptrans -DDEBUG=0 -DTDEBUG=1
+linux-trace: Penngrammar.tab.c lex.yy.c
+	${CXX} -O3 Penngrammar.tab.c lex.yy.c -lfl -o ptrans -DDEBUG=0 -DTDEBUG=1
 
-#penntransform.o: penntransform.c penntransform.tab.h
+clean:
+	rm -f Penngrammar.tab.c Penngrammar.tab.h lex.yy.c ptrans
+	rm -rf ptrans.dSYM
+
 #.SUFFIXES:	.pgm .l .y .c
 

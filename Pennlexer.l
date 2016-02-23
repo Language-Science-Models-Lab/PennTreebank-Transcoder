@@ -1,18 +1,14 @@
 %{
 // Scanner file to convert Penn Treebank into lambek calculus
 // by Joseph Nunn and Sean Fulop, 2015
-#include <cstdio>
-#include <iostream>
-#include <string>
 
-using namespace std;
+#include "Penngrammar.tab.h"  // gets the token types that we return
 
 #define YY_DECL extern "C" int yylex()
+
 #define yyterminate() return EOF_TOKEN
 
 extern void yyerror(const char *) ;
-
-#include "Penngrammar.tab.h"  // gets the token types that we return
 
 %}
 
@@ -27,8 +23,6 @@ FRAGMENT \(FRAG.*
 S S(BAR)?Q?~?|SINV~?|S-CLF~?|S-TPC~?|S-ADV~?
 
 NONTERMINAL [-,\.`':\+]*[A-Z][-\+,:$\.~`'A-Z]+
-
-
 
 %%
 
@@ -53,7 +47,7 @@ NONTERMINAL [-,\.`':\+]*[A-Z][-\+,:$\.~`'A-Z]+
              return TERMINAL_TOKEN ; }
 
 [A-Z][A-Z]+[a-z]*/\) { yylval.str = strdup( yytext ) ;
-             return TERMINAL_TOKEN ; }
+                       return TERMINAL_TOKEN ; }
  /* the above is not part of the TERMINAL defs because it uses trailing context, which is more expensive in disjunctions of regexps */
 
 {NONTERMINAL} { yylval.str = strdup( yytext ) ;

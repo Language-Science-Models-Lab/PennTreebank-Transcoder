@@ -73,8 +73,13 @@ while (my $infile = readdir(DIR)) {
 	$diff =~ s/./ord $& ? '^' : ' '/ge;
 #	print "Transformed:\n\n$transformOutput\n";
 #	print "Expected   :\n\n$outfileData\n\n" ;	
-#	print "Difference :\n\n$diff\n\n" ;	
-	print "$_\n" for $transformOutput, $outfileData, $diff;
+	#	print "Difference :\n\n$diff\n\n" ;
+	print "Output      : " ;
+	print "$_\n" for $transformOutput ;
+	print "Expected    : " ;
+	print "$_\n" for $outfileData ;
+	print "Differences : " ;
+	print "$_\n" for $diff ;
 	$failcount++ ;
 	print "\n\n" ;
   } else {

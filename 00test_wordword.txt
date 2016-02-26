@@ -1,4 +1,0 @@
-(S @(NP+VP (NP~ @(NP (DT @The) @(NPR (NNP @National) @(NNP @Association))) (PP @(IN @of) (NP~ @(NPR @(NNP @Manufacturers))))) @(VP @(VBD+PP @(VBD @settled) (PP @(IN @on) (NP~ @(NP (DT @the) @(NPR+NP (NPR @(NNP @Hoosier)) @(NP @(NN @capital)))) (PP @(IN @of) (NP~ @(NPR @(NNP @Indianapolis))))))) (PP @(IN @for) (NP~ (PRP$ @its) @(NN+NN+NN (NN @fall) @(NN+NN (NN @board) @(NN @meeting))))))) (. @.))
-
-# Desired output structure
-#[[[The[National Association]][of Manufacturers]][[settled[on[[the[Hoosier capital]][of Indianapolis]]]][for[its[fall[board meeting]]]]]]:type(type(type(type(settled, _)@(type(on, _)@(type(type(type(capital, _)@type(Hoosier, _), _)@type(the, _), _)@(type(of, _)@type(Indianapolis, _), _), _), _), _)@type(type(for, _)@type(type(type(type(meeting, _)@type(board), _)@type(fall, _), _)@type(its, _), _), _), _)@type(type(type(type(Association, _)@type(National, _), _)@type(The, _), _)@type(type(of, _)@type(Manufacturers, _), _), _), s)

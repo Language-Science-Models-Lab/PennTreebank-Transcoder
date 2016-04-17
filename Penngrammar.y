@@ -209,7 +209,7 @@ clause : '(' s phrase headphrase ')' { $$ = output( "[%s %s]", 2, $3, $4 ) ;
 									      printf( "in clause rule 9: top of stack is %s\n", rulestacks[ "clause" ].top().c_str() ) ;
 							           #endif
  } ;
-	   | '(' s word ')' { $$ = $3 ;
+	   | '(' s word ')' { $$ = output( "[%s]", 1, $3 ) ;
                             rulestacks[ "clause" ].push( output( "type(%s, s)", 1, rulestacks[ "word" ].top().c_str() ) ) ;
 		                            rulestacks[ "word" ].pop() ;
 

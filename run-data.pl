@@ -1,14 +1,14 @@
 #!/usr/bin/perl
 
-# This script runs the ptrans tranform on the *.in files in the data directory, generating *.out files for each
-
+# This script runs the ptrans tranform on the *.in files in the datain directory, generating *.out files for each in the dataout directory
 # by Joseph Nunn, all rights reserved
 
 use strict;
 use warnings;
 use File::Slurp ;
 
-my $datadir = 'data';
+my $datain = 'data/preprocessed';
+my $dataout = 'data/parsed';
 my $failcount = 0;
 my $goodcount = 0;
 my $bar = "----------------\n";
@@ -37,14 +37,14 @@ if ( ! -x "ptrans" ) {
   exit( 1 ) ;
 }
 
-opendir(DIR, $datadir) or die $!;
+opendir(DIR, $datain) or die $!;
 
-print "Running ptrans on data directory $datadir\n";
+print "Running ptrans on data directory $datain and output to $dataout\n";
 print "$bar";
 while (my $infile = readdir(DIR)) {
 
   # We only want files
-  next unless (-f "$datadir/$infile");
+  next unless (-f "$datain/$infile");
 
   # Use a regular expression to find input files
   next unless ($infile =~ m/(.*)\.in$/);
@@ -54,7 +54,7 @@ while (my $infile = readdir(DIR)) {
 
   print "Generating output file $outfile for input file $infile\n" ;
   
-  my $transformOutput = `./ptrans $datadir/$infile > $datadir/$outfile` ;
+  my $transformOutput = `./ptrans $datain/$infile > $dataout/$outfile` ;
 }
 
 print "$bar";

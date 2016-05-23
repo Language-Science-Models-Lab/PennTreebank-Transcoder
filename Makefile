@@ -5,35 +5,32 @@ CXX = g++
 
 all: osx
 
-#penntransform: penntransform.tab.o penntransform.o
-#	${CC} -o $@ penntransform.tab.o penntransform.o
+pgrammar.tab.c pgrammar.tab.h: pgrammar.y
+	bison -vd pgrammar.y
 
-Penngrammar.tab.c Penngrammar.tab.h: Penngrammar.y
-	bison -vd Penngrammar.y
+lex.yy.c: plexer.l pgrammar.tab.h
+	flex -l plexer.l
 
-lex.yy.c: Pennlexer.l Penngrammar.tab.h
-	flex -l Pennlexer.l
+osx: pgrammar.tab.c lex.yy.c
+	${CXX} -O3 pgrammar.tab.c lex.yy.c -ll -o ptrans -DDEBUG=0
 
-osx: Penngrammar.tab.c lex.yy.c
-	${CXX} -O3 Penngrammar.tab.c lex.yy.c -ll -o ptrans -DDEBUG=0
+linux: pgrammar.tab.c lex.yy.c
+	${CXX} -O3 pgrammar.tab.c lex.yy.c -lfl -o ptrans -DDEBUG=0
 
-linux: Penngrammar.tab.c lex.yy.c
-	${CXX} -O3 Penngrammar.tab.c lex.yy.c -lfl -o ptrans -DDEBUG=0
+osx-debug: pgrammar.tab.c lex.yy.c
+	${CXX} -g pgrammar.tab.c lex.yy.c -ll -o ptrans -DDEBUG=1 -DTDEBUG=1
 
-osx-debug: Penngrammar.tab.c lex.yy.c
-	${CXX} -g Penngrammar.tab.c lex.yy.c -ll -o ptrans -DDEBUG=1 -DTDEBUG=1
+linux-debug: pgrammar.tab.c lex.yy.c
+	${CXX} -g pgrammar.tab.c lex.yy.c -lfl -o ptrans -DDEBUG=1 -DTDEBUG=1
 
-linux-debug: Penngrammar.tab.c lex.yy.c
-	${CXX} -g Penngrammar.tab.c lex.yy.c -lfl -o ptrans -DDEBUG=1 -DTDEBUG=1
+osx-trace: pgrammar.tab.c lex.yy.c
+	${CXX} -O3 pgrammar.tab.c lex.yy.c -ll -o ptrans -DDEBUG=0 -DTDEBUG=1
 
-osx-trace: Penngrammar.tab.c lex.yy.c
-	${CXX} -O3 Penngrammar.tab.c lex.yy.c -ll -o ptrans -DDEBUG=0 -DTDEBUG=1
-
-linux-trace: Penngrammar.tab.c lex.yy.c
-	${CXX} -O3 Penngrammar.tab.c lex.yy.c -lfl -o ptrans -DDEBUG=0 -DTDEBUG=1
+linux-trace: pgrammar.tab.c lex.yy.c
+	${CXX} -O3 pgrammar.tab.c lex.yy.c -lfl -o ptrans -DDEBUG=0 -DTDEBUG=1
 
 clean:
-	rm -f Penngrammar.tab.c Penngrammar.tab.h lex.yy.c ptrans
+	rm -f pgrammar.tab.c pgrammar.tab.h pgrammar.output lex.yy.c ptrans
 	rm -rf ptrans.dSYM
 
 #.SUFFIXES:	.pgm .l .y .c

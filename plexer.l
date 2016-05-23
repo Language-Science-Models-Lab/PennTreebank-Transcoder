@@ -2,7 +2,7 @@
 // Scanner file to convert Penn Treebank into lambek calculus
 // by Joseph Nunn and Sean Fulop, 2015
 
-#include "Penngrammar.tab.h"  // gets the token types that we return
+#include "pgrammar.tab.h"  // gets the token types that we return
 
 #define YY_DECL extern "C" int yylex()
 

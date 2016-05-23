@@ -1,15 +1,27 @@
-# README #
+# README
+# by Joseph Nunn
+# all rights reserved
 
-Repository includes 3 important files:
+Makefile will build the executable 'ptrans' by just using 'make'.
+You may want to change the default environment depending on your OS in that file.
 
-Pennlexer.l is meant to be processed using Flex, using commands like this:
+Repository includes several important scripts:
 
-flex Pennlexer.l  # This will tell Flex to create the C program for a lexer with the standard name lex.yy.c
+run-tests.pl   
+------------
+This script first builds the ptrans executable, then tests it using the tests directory contents.  If you are adding rules to the grammar, please
+add a test file to verify your added grammar rule gives the desired output and run the tests!
 
-gcc lex.yy.c -lfl # This will compile the output C program and produce an executable lexer with the standard name a.out
+preprocess.sh
+-------------
+This script makes use of Jeff Eisner's https://github.com/jeisner/treebank-scripts project to preprocess the Penn Treebank data prior to running
+the ptrans transformation.  You should create a symbolic link to Jeff's treebank-scripts in this project and/or edit its location in preprocess.sh.  
+You may wish to change the default input directory depending on where you have the Treebank installed.  Output goes to data/preprocessed.
 
-Then a.out can be executed with the target filename as argument.
+run-data.pl
+-----------
+This script first builds the ptrans executable, then takes preprocessed data, the result of running the above script, in the specified data/preprocessed
+directory and runs the ptrans transformation on it, leaving the result in data/parsed directory.  You may wish to edit the directory locations in this
+script.
 
-Penngrammar.y is meant to be processed by Bison.
-
-Makefile is the all-important thing that compiles everything together.
+The result of running run-data.pl will be the generation of .out files suitable as input to the LambekUnification-Learner project.

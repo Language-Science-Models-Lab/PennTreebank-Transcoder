@@ -103,8 +103,8 @@ start : clause eolf { printf( "%s:%s\n", $1, rulestacks[ "clause" ].top().c_str(
                       rulestacks[ "clause" ].pop() ; } ;
       | start clause eolf { printf("%s:%s\n", $2, rulestacks[ "clause" ].top().c_str() ) ;
                             rulestacks[ "clause" ].pop() ; } ;
-	  | eolf
-	  | start '\n' ;
+      | eolf
+      | start '\n' ;
 
 eolf : '\n' { $$ = (char*)"\n" ; }
      | "End of File" ;

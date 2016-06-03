@@ -54,19 +54,19 @@ char* result ;
 
 // List of lefthand side rule names, if you add a new rule add the name to the list here to be able to use it in the grammar for generating type info!
 char const *ruleNames[] = { "start"
-						  , "eolf"
-						  , "headphrase"
-						  , "headclause"
-						  , "clause"
-						  , "phrase"
-						  , "word"
-						  , "subword"
-						  , "s"
-						  , "pause"
-						  , "terminal"
-						  , "nonterminal" } ;
+			  , "eolf"
+			  , "headphrase"
+			  , "headclause"
+			  , "clause"
+			  , "phrase"
+			  , "word"
+			  , "subword"
+			  , "s"
+			  , "pause"
+			  , "terminal"
+			  , "nonterminal" } ;
  
-list <string> rules( ruleNames, ruleNames + SIZEOF_ARRAY( ruleNames ) );
+list <string> rules( ruleNames, ruleNames + SIZEOF_ARRAY( ruleNames ) ) ;
  
 // Need a stack for each lefthand side name
 map < const string, stack <string> > rulestacks ;
@@ -112,6 +112,7 @@ eolf : '\n' { $$ = (char*)"\n" ; }
 headphrase : '@' phrase { $$ = $2 ;
                           rulestacks[ "headphrase" ].push( rulestacks[ "phrase" ].top().c_str() ) ;
 	                  rulestacks[ "phrase" ].pop() ;
+
                           #ifdef TDEBUG
 		       	     printf( "in headphrase rule: top of stack is %s\n", rulestacks[ "headphrase" ].top().c_str() ) ;
                           #endif
@@ -120,6 +121,7 @@ headphrase : '@' phrase { $$ = $2 ;
 headclause : '@' clause { $$ = $2 ;
                           rulestacks[ "headclause" ].push( rulestacks[ "clause" ].top().c_str() ) ;
 	                  rulestacks[ "clause" ].pop() ;
+
                           #ifdef TDEBUG
 			     printf( "in headclause rule: top of stack is %s\n", rulestacks[ "headclause" ].top().c_str() ) ;
 			  #endif

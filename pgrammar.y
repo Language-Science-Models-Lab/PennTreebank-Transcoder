@@ -54,17 +54,17 @@ char* result ;
 
 // List of lefthand side rule names, if you add a new rule add the name to the list here to be able to use it in the grammar for generating type info!
 char const *ruleNames[] = { "start"
-			  , "eolf"
-			  , "headphrase"
-			  , "headclause"
-			  , "clause"
-			  , "phrase"
-			  , "word"
-			  , "subword"
-			  , "s"
-			  , "pause"
-			  , "terminal"
-			  , "nonterminal" } ;
+						  , "eolf"
+						  , "headphrase"
+						  , "headclause"
+					      , "clause"
+						  , "phrase"
+						  , "word"
+						  , "subword"
+						  , "s"
+						  , "pause"
+						  , "terminal"
+						  , "nonterminal" } ;
  
 list <string> rules( ruleNames, ruleNames + SIZEOF_ARRAY( ruleNames ) ) ;
  

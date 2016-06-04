@@ -1,5 +1,5 @@
 %{
-// Scanner file to convert Penn Treebank into lambek calculus
+// Scanner file to convert Penn Treebank into lambda calculus terms
 // by Joseph Nunn and Sean Fulop, 2015
 
 #include "pgrammar.tab.h"  // gets the token types that we return

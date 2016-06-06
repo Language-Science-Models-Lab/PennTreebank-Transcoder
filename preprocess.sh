@@ -5,7 +5,12 @@
 
 # TSCRIPTS must point to a symbolic link or actual directory to Jeff Eisner's Treebank Scripts https://github.com/jeisner/treebank-scripts.git
 TSCRIPTS=jeisner-scripts
+
+# Project local Data directory for Treebank data, make symbolic link to Treebank directory in this data directory
+# currently operates only over 1 subdirectory of Treebank data specified below, will be changed to cover all directories.
 CORPIN=data/Treebank/parsed/mrg/wsj
+
+# Project local data directory for preprocessed data
 CORPOUT=data/preprocessed
 
 # Scripts to be run here, note order is important!, check final perl call to see how scripts are run.

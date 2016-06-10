@@ -14,6 +14,13 @@ my $goodcount = 0;
 my $bar = "----------------\n";
 my $exename = "ptrans" ;
 
+
+if (! -d $dataout) {
+    unless(mkdir $dataout) {
+        die "Unable to create $dataout\n";
+    }
+}
+
 print "Making Clean\n";
 my $compileResult = `make clean` ;
 print "Testing Compile\n";

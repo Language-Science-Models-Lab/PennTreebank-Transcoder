@@ -41,6 +41,10 @@ if [ $GUARD -eq 1 ]; then
    exit 1
 fi
 
+if [ ! -d $CORPOUT ]; then
+   mkdir -p $CORPOUT
+fi
+
 #Do the work
 perl -I $TSCRIPTS $TSCRIPTS/oneline $CORPIN/[0-1]*/*.mrg | perl -I $TSCRIPTS $TSCRIPTS/${SCRIPT_LIST[0]} | perl -I $TSCRIPTS $TSCRIPTS/${SCRIPT_LIST[1]} | perl -I $TSCRIPTS $TSCRIPTS/${SCRIPT_LIST[2]} | perl -I $TSCRIPTS $TSCRIPTS/${SCRIPT_LIST[3]} | perl -I $TSCRIPTS $TSCRIPTS/${SCRIPT_LIST[4]} -q | perl -I $TSCRIPTS $TSCRIPTS/${SCRIPT_LIST[5]} $TSCRIPTS/newmarked.bug | perl -I $TSCRIPTS $TSCRIPTS/${SCRIPT_LIST[6]} $TSCRIPTS/newmarked.mrk | perl -I $TSCRIPTS $TSCRIPTS/${SCRIPT_LIST[7]} -l | perl -I $TSCRIPTS $TSCRIPTS/${SCRIPT_LIST[8]} > $CORPOUT/formatted.in
 

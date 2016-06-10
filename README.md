@@ -10,6 +10,8 @@ This project takes Penn Treebank data (right now only the first directory of the
 
 Building the transcoder
 -----------------------
+You will need Flex and Bison installed to run 'make', you will need Perl installed and a Bash shell to run the scripts.  You may also need some C library dependencies as requested in the parser or scanner files.
+
 Makefile will build the executable 'ptrans' by just using 'make'.
 You may want to change the default environment depending on your OS in that file.
 

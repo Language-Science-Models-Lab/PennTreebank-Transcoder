@@ -12,7 +12,7 @@ run-tests.pl
 ------------
 This script first builds the ptrans executable, then tests it using the tests directory contents.  If you are adding rules to the grammar, please add input and output test files which verify your added grammar rule gives the desired output and run the tests to make sure everything works!
 
-Note, not all tests are grammatical structures mapped corrected to their sentences, check the input files to see the actual structure, do not reply on your knowledge of English to understand the supplied structure of test sentences.  Sean Fulop swears he will fix the mess one day :)
+Note, not all tests are grammatical structures mapped correctly to their sentences, check the input files to see the actual structure, do not reply on your knowledge of English to guesstimate the input structure of test sentences.  Sean Fulop swears he will fix the mess one day :)
 
 preprocess.sh
 -------------

@@ -3,6 +3,13 @@
 
 See LICENSE file
 
+About
+-----
+
+This project takes Penn Treebank data (right now only the first directory of the wsj data), preprocesses it with a chain of jeisner's Treebank scripts, and then runs a custom compiler front end, a Flex and Bison based scanner and parser, to transform the sentence data into type annotated lambda terms, which we will be using in a prolog-based learner we are still working on.
+
+Building the transcoder
+-----------------------
 Makefile will build the executable 'ptrans' by just using 'make'.
 You may want to change the default environment depending on your OS in that file.
 

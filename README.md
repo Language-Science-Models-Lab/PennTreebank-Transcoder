@@ -8,6 +8,8 @@ About
 
 This project takes Penn Treebank data (right now only the first directory of the wsj data), preprocesses it with a chain of jeisner's Treebank scripts, and then runs a custom compiler front end, a Flex and Bison based scanner and parser, to transform the sentence data into type annotated lambda terms, which we will be using in a prolog-based learner we are still working on.
 
+In the tests subdirectory you will find matched .in and .out files.  The .in files are passed through ptrans and diffed with the matching .out files to verify particular grammar rules in the parser function correctly when executing the run-tests.pl script as noted below.  Each of these matched input-output tests is a different example of how ptrans will transcode treebank data into a typed lambda term.
+
 Building the transcoder
 -----------------------
 You will need Flex and Bison installed to run 'make', you will need Perl installed and a Bash shell to run the scripts.  You may also need some C library dependencies as requested in the parser or scanner files.

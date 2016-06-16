@@ -2,6 +2,8 @@ Penn Treebank Transcoder README
 
 by Joseph Nunn
 
+MIT License
+
 see LICENSE file
 
 Makefile will build the executable 'ptrans' by just using 'make'.
